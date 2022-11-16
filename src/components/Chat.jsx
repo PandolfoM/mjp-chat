@@ -5,8 +5,8 @@ import Input from "./Input";
 
 const Chat = () => {
   return (
-    <div style={{ flex: 2 }}>
-      <Flex direction={"column"} justify="space-between" h={"100%"}>
+    <div style={{ flex: 3 }}>
+      <Flex direction={"column"} justify="space-between" h={"90%"}>
         <Messages />
         <Input />
       </Flex>
