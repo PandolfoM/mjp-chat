@@ -15,7 +15,7 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, storage, db } from "../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -34,7 +34,6 @@ const Register = () => {
   });
 
   const handleSubmit = async (values) => {
-    console.log(values);
     const email = values.email;
     const displayName = values.username;
     const password = values.password;
@@ -42,8 +41,6 @@ const Register = () => {
 
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
-
-      console.log(res);
 
       const storageRef = ref(storage, displayName);
 
@@ -116,7 +113,7 @@ const Register = () => {
           />
           <Button type="submit">Sign Up</Button>
         </Flex>
-        <Text>Already have account? Sign in</Text>
+        <Text>Already have account? <Link to={"/login"} style={{textDecoration: "none"}}> Login</Link></Text>
       </form>
     </Flex>
   );

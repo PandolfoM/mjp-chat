@@ -25,7 +25,6 @@ function Home() {
           style={{
             display: "flex",
             flexDirection: "row-reverse",
-            // width: "100%",
             height: "100%",
           }}>
           <Sidebar />
