@@ -5,10 +5,13 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ActionIcon, Avatar, Box, Flex, Menu, Text } from "@mantine/core";
 import { signOut } from "firebase/auth";
-import React from "react";
+import React, { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 import { auth } from "../firebase";
 
 const Navbar = () => {
+  const { currentUser } = useContext(AuthContext);
+
   return (
     <Flex
       align={"center"}
@@ -17,8 +20,8 @@ const Navbar = () => {
       sx={{ background: "red", maxHeight: "100px" }}>
       <Text>MJP Chat</Text>
       <Flex align={"inherit"} gap="0.5rem">
-        <Avatar src={null} radius="xl"></Avatar>
-        <Text>Matthew</Text>
+        <Avatar src={currentUser.photoURL} radius="xl"></Avatar>
+        <Text>{currentUser.displayName}</Text>
         <Menu withArrow>
           <Menu.Target>
             <ActionIcon variant="transparent" c="dark">
