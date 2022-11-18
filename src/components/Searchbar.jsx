@@ -54,8 +54,8 @@ const Searchbar = () => {
       console.error(err);
     }
 
-    setUser(null)
-    setUsername("")
+    setUser(null);
+    setUsername("");
   };
 
   const handleSearch = async () => {
@@ -82,11 +82,23 @@ const Searchbar = () => {
     <div style={{ borderBottom: "1px solid black" }}>
       <div>
         <TextInput
-          placeholder="Search User"
+          autoComplete="false"
+          autoCapitalize="false"
+          autoCorrect="false"
+          placeholder="Find User"
           variant="unstyled"
           onChange={(e) => setUsername(e.target.value)}
           onKeyDown={handleKey}
           value={username}
+          p="xs"
+          sx={(theme) => ({
+            input: {
+              background: theme.colors.tokyo[9],
+              borderRadius: "5px",
+              color: theme.colors.tokyo[2],
+              "&::placeholder": { color: theme.colors.tokyo[10], opacity: 1 },
+            },
+          })}
         />
       </div>
       {user && (
@@ -94,6 +106,8 @@ const Searchbar = () => {
           align={"center"}
           gap="0.5rem"
           p="0.5rem"
+          m={"xs"}
+          c={"tokyo.2"}
           sx={{ cursor: "pointer" }}
           onClick={handleSelect}>
           <Avatar src={user.photoURL} radius="xl"></Avatar>

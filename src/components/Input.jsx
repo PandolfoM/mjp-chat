@@ -4,7 +4,14 @@ import {
   faPaperPlane,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Box, Button, FileButton, Flex, Textarea } from "@mantine/core";
+import {
+  Box,
+  Button,
+  FileButton,
+  Flex,
+  Textarea,
+  useMantineTheme,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import {
   arrayUnion,
@@ -23,6 +30,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 const Input = () => {
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
+  const theme = useMantineTheme();
 
   const form = useForm({
     initialValues: {
@@ -95,12 +103,16 @@ const Input = () => {
     <Box p={"sm"}>
       <Box
         component="form"
-        bg={"tokyo.0"}
+        bg={"tokyo.3"}
         sx={{
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           borderRadius: "5px",
+          borderBottom: "#16161e 2px solid",
+          "&:hover, &:focus-within": {
+            borderColor: theme.colors.tokyo[14]
+          }
         }}>
         <Textarea
           w={"100%"}
@@ -112,12 +124,12 @@ const Input = () => {
           px="sm"
           variant="unstyled"
           disabled={!data.user?.displayName}
-          sx={(theme) => ({
+          sx={{
             ".mantine-tlqs1f": {
               color: theme.colors.tokyo[2],
               "&::placeholder": { color: theme.colors.tokyo[10], opacity: 1 },
             },
-          })}
+          }}
           {...form.getInputProps("text")}
         />
         <Flex align={"center"} justify="space-between">

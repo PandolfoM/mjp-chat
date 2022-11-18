@@ -37,6 +37,8 @@ function App() {
             "#5f647e", //10: interactive-normal
             "#161620", //11: popout
             "#565f89", //12: text-muted
+            "#24263171", //13: bg-mod-selected
+            "#7aa2f7", //14: accent
           ],
         },
         globalStyles: (theme) => ({

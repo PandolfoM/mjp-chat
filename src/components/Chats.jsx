@@ -1,4 +1,4 @@
-import { Avatar, Flex, Text } from "@mantine/core";
+import { Avatar, Flex, Text, useMantineTheme } from "@mantine/core";
 import { doc, onSnapshot } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
@@ -7,9 +7,9 @@ import { db } from "../firebase";
 
 const Chats = () => {
   const [chats, setChats] = useState([]);
-
   const { currentUser } = useContext(AuthContext);
   const { data, dispatch } = useContext(ChatContext);
+  const theme = useMantineTheme();
 
   useEffect(() => {
     const getChats = () => {
@@ -41,17 +41,18 @@ const Chats = () => {
             p="0.5rem"
             c="tokyo.4"
             m={"xs"}
-            sx={(theme) => ({
+            sx={{
               cursor: "pointer",
               borderRadius: "5px",
-              background: data.user?.uid === chat[1].userInfo.uid
-                ? theme.colors.tokyo[8]
-                : "transparent",
+              background:
+                data.user?.uid === chat[1].userInfo.uid
+                  ? theme.colors.tokyo[13]
+                  : "transparent",
               "&:hover": {
                 color: theme.colors.tokyo[5],
                 background: theme.colors.tokyo[8],
               },
-            })}
+            }}
             onClick={() => handleSelect(chat[1].userInfo)}>
             <Avatar src={chat[1].userInfo.photoURL} radius="xl"></Avatar>
             <div>
