@@ -1,4 +1,4 @@
-import { Avatar, Flex, Text, TextInput } from "@mantine/core";
+import { Avatar, Flex, Text, TextInput, useMantineTheme } from "@mantine/core";
 import {
   collection,
   doc,
@@ -15,6 +15,7 @@ import { db } from "../firebase";
 import { AuthContext } from "../context/AuthContext";
 
 const Searchbar = () => {
+  const theme = useMantineTheme()
   const [username, setUsername] = useState("");
   const [user, setUser] = useState(null);
   const [err, setErr] = useState(false);
@@ -79,7 +80,7 @@ const Searchbar = () => {
   };
 
   return (
-    <div style={{ borderBottom: "1px solid black" }}>
+    <div style={{ borderBottom: `1px solid ${theme.colors.tokyo[9]}` }}>
       <div>
         <TextInput
           autoComplete="false"

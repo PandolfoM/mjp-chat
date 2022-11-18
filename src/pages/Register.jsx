@@ -8,6 +8,7 @@ import {
   Text,
   TextInput,
   Title,
+  useMantineTheme,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import React from "react";
@@ -18,6 +19,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const theme = useMantineTheme();
   const navigate = useNavigate();
   const form = useForm({
     initialValues: {
@@ -57,10 +59,11 @@ const Register = () => {
               displayName,
               email,
               photoURL: downloadURL,
+              online: true,
             });
 
             await setDoc(doc(db, "userChats", res.user.uid), {});
-            
+
             navigate("/");
           } catch (error) {
             console.error(error);
@@ -78,6 +81,7 @@ const Register = () => {
       align="center"
       direction="row"
       wrap="wrap"
+      bg={"tokyo.0"}
       h={"100vh"}>
       <form
         onSubmit={form.onSubmit((values) => handleSubmit(values))}
@@ -89,31 +93,89 @@ const Register = () => {
           boxShadow: "8px 8px 10px 0px rgba(0,0,0,0.2)",
           borderRadius: "5px",
           padding: "1rem",
+          background: theme.colors.tokyo[1],
+          color: theme.colors.tokyo[2],
         }}>
         <Title order={2}>MJP Chat</Title>
         <Title order={3}>Sign Up</Title>
         <Flex direction="column" gap="sm" w={"250px"}>
           <TextInput
             placeholder="Username"
+            variant="unstyled"
+            px="sm"
+            bg="tokyo.9"
+            sx={(theme) => ({
+              borderRadius: "5px",
+              input: {
+                color: theme.colors.tokyo[2],
+                "&::placeholder": { color: theme.colors.tokyo[10], opacity: 1 },
+              },
+            })}
             {...form.getInputProps("username")}
           />
           <TextInput
             type={"email"}
             placeholder="Email"
+            variant="unstyled"
+            px="sm"
+            bg="tokyo.9"
+            sx={(theme) => ({
+              borderRadius: "5px",
+              input: {
+                color: theme.colors.tokyo[2],
+                "&::placeholder": { color: theme.colors.tokyo[10], opacity: 1 },
+              },
+            })}
             {...form.getInputProps("email")}
           />
           <PasswordInput
             placeholder="Password"
+            variant="unstyled"
+            bg="tokyo.9"
+            sx={(theme) => ({
+              borderRadius: "5px",
+              input: {
+                color: theme.colors.tokyo[2],
+                "&::placeholder": { color: theme.colors.tokyo[10], opacity: 1 },
+              },
+              ".mantine-PasswordInput-rightSection button": {
+                "&:hover": {
+                  background: "transparent",
+                  color: theme.colors.tokyo[5],
+                },
+              },
+            })}
             {...form.getInputProps("password")}
           />
           <FileInput
             placeholder="Profile Picture"
+            variant="unstyled"
+            bg="tokyo.9"
+            sx={(theme) => ({
+              borderRadius: "5px",
+              button: {
+                color: theme.colors.tokyo[2],
+              },
+              ".mantine-Input-icon, .mantine-FileInput-placeholder": {
+                color: theme.colors.tokyo[10],
+              },
+            })}
             {...form.getInputProps("file")}
             icon={<FontAwesomeIcon icon={faArrowUpFromBracket} />}
           />
           <Button type="submit">Sign Up</Button>
         </Flex>
-        <Text>Already have account? <Link to={"/login"} style={{textDecoration: "none"}}> Login</Link></Text>
+        <Text fz={"xs"} c={theme.colors.tokyo[10]}>
+          Already have an account?{" "}
+          <Link
+            to={"/login"}
+            style={{
+              textDecoration: "none",
+              color: theme.colors.tokyo[2],
+            }}>
+            Login
+          </Link>
+        </Text>
       </form>
     </Flex>
   );

@@ -39,6 +39,8 @@ function App() {
             "#565f89", //12: text-muted
             "#24263171", //13: bg-mod-selected
             "#7aa2f7", //14: accent
+            "#7289da", //15: button
+            "#5c6fb1", //16: button-hover
           ],
         },
         globalStyles: (theme) => ({
