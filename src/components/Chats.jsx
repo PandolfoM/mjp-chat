@@ -9,7 +9,7 @@ const Chats = () => {
   const [chats, setChats] = useState([]);
 
   const { currentUser } = useContext(AuthContext);
-  const { dispatch } = useContext(ChatContext);
+  const { data, dispatch } = useContext(ChatContext);
 
   useEffect(() => {
     const getChats = () => {
@@ -39,12 +39,24 @@ const Chats = () => {
             align={"center"}
             gap="0.5rem"
             p="0.5rem"
-            sx={{ cursor: "pointer" }}
+            c="tokyo.4"
+            m={"xs"}
+            sx={(theme) => ({
+              cursor: "pointer",
+              borderRadius: "5px",
+              background: data.user?.uid === chat[1].userInfo.uid
+                ? theme.colors.tokyo[8]
+                : "transparent",
+              "&:hover": {
+                color: theme.colors.tokyo[5],
+                background: theme.colors.tokyo[8],
+              },
+            })}
             onClick={() => handleSelect(chat[1].userInfo)}>
             <Avatar src={chat[1].userInfo.photoURL} radius="xl"></Avatar>
             <div>
-              <Text>{chat[1].userInfo.displayName}</Text>
-              <Text>{chat[1].lastMessage?.text}</Text>
+              <Text fz={"xl"}>{chat[1].userInfo.displayName}</Text>
+              <Text fz={"sm"}>{chat[1].lastMessage?.text}</Text>
             </div>
           </Flex>
         ))}

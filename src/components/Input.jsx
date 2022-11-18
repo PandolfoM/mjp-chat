@@ -4,7 +4,7 @@ import {
   faPaperPlane,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, FileButton, Flex, Textarea } from "@mantine/core";
+import { Box, Button, FileButton, Flex, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import {
   arrayUnion,
@@ -33,8 +33,8 @@ const Input = () => {
   });
 
   const handleSend = async () => {
-    const text = form.values.text
-    const img = form.values.img
+    const text = form.values.text;
+    const img = form.values.img;
 
     if (img) {
       const storageRef = ref(storage, uuid());
@@ -89,47 +89,85 @@ const Input = () => {
       file: null,
       img: null,
     });
-  }
-
+  };
 
   return (
-    <form
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-      }}>
-      <Textarea
-        w={"100%"}
-        radius={"xs"}
-        placeholder="Message"
-        autosize
-        minRows={1}
-        variant="unstyled"
-        {...form.getInputProps("text")}
-      />
-      <Flex align={"center"} justify="space-between">
-        <FileButton {...form.getInputProps("file")}>
-          {(props) => (
-            <Button {...props} size={"sm"} variant="subtle">
-              <FontAwesomeIcon icon={faPaperclip} />
-            </Button>
-          )}
-        </FileButton>
-        <FileButton
-          accept="image/png,image/jpeg"
-          {...form.getInputProps("img")}>
-          {(props) => (
-            <Button {...props} size={"sm"} variant="subtle">
-              <FontAwesomeIcon icon={faArrowUpFromBracket} />
-            </Button>
-          )}
-        </FileButton>
-        <Button size={"sm"} variant="subtle" onClick={handleSend}>
-          <FontAwesomeIcon icon={faPaperPlane} />
-        </Button>
-      </Flex>
-    </form>
+    <Box p={"sm"}>
+      <Box
+        component="form"
+        bg={"tokyo.0"}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          borderRadius: "5px",
+        }}>
+        <Textarea
+          w={"100%"}
+          placeholder={
+            data.user?.displayName ? `Message @${data.user?.displayName}` : ""
+          }
+          autosize
+          minRows={1}
+          px="sm"
+          variant="unstyled"
+          disabled={!data.user?.displayName}
+          sx={(theme) => ({
+            ".mantine-tlqs1f": {
+              color: theme.colors.tokyo[2],
+              "&::placeholder": { color: theme.colors.tokyo[10], opacity: 1 },
+            },
+          })}
+          {...form.getInputProps("text")}
+        />
+        <Flex align={"center"} justify="space-between">
+          <FileButton
+            {...form.getInputProps("file")}
+            sx={(theme) => ({
+              color: theme.colors.tokyo[10],
+              "&:hover": {
+                background: "transparent",
+                color: theme.colors.tokyo[5],
+              },
+            })}>
+            {(props) => (
+              <Button {...props} size={"sm"} variant="subtle">
+                <FontAwesomeIcon icon={faPaperclip} />
+              </Button>
+            )}
+          </FileButton>
+          <FileButton
+            accept="image/png,image/jpeg"
+            {...form.getInputProps("img")}
+            sx={(theme) => ({
+              color: theme.colors.tokyo[10],
+              "&:hover": {
+                background: "transparent",
+                color: theme.colors.tokyo[5],
+              },
+            })}>
+            {(props) => (
+              <Button {...props} size={"sm"} variant="subtle">
+                <FontAwesomeIcon icon={faArrowUpFromBracket} />
+              </Button>
+            )}
+          </FileButton>
+          <Button
+            size={"sm"}
+            variant="subtle"
+            onClick={handleSend}
+            sx={(theme) => ({
+              color: theme.colors.tokyo[10],
+              "&:hover": {
+                background: "transparent",
+                color: theme.colors.tokyo[5],
+              },
+            })}>
+            <FontAwesomeIcon icon={faPaperPlane} />
+          </Button>
+        </Flex>
+      </Box>
+    </Box>
   );
 };
 

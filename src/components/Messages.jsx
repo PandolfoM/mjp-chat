@@ -1,3 +1,4 @@
+import { Box } from "@mantine/core";
 import { doc, onSnapshot } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
 import { ChatContext } from "../context/ChatContext";
@@ -19,11 +20,11 @@ function Messages() {
   }, [data.chatId]);
 
   return (
-    <div style={{ background: "gray", height: "100%", overflowY: "auto" }}>
+    <Box sx={{ overflowY: "auto" }} bg="tokyo.1" h="100%">
       {messages.map((m) => (
         <Message message={m} key={m.id}/>
       ))}
-    </div>
+    </Box>
   );
 }
 

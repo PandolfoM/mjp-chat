@@ -83,6 +83,7 @@ const Searchbar = () => {
       <div>
         <TextInput
           placeholder="Search User"
+          variant="unstyled"
           onChange={(e) => setUsername(e.target.value)}
           onKeyDown={handleKey}
           value={username}

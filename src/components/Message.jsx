@@ -1,4 +1,12 @@
-import { Avatar, Flex, Image, Text } from "@mantine/core";
+import {
+  Avatar,
+  Flex,
+  Image,
+  Space,
+  Text,
+  Title,
+  useMantineTheme,
+} from "@mantine/core";
 import React, { useContext, useEffect, useRef } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { ChatContext } from "../context/ChatContext";
@@ -7,7 +15,10 @@ const Message = ({ message }) => {
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
   const ref = useRef();
-  
+  const theme = useMantineTheme();
+
+  console.log(data);
+
   useEffect(() => {
     ref.current?.scrollIntoView({ behavior: "smooth" });
   }, [message]);
@@ -24,12 +35,20 @@ const Message = ({ message }) => {
               : data.user.photoURL
           }
           radius={"xl"}></Avatar>
-        <Text>Just now</Text>
       </Flex>
       <Flex
         direction={"column"}
         align={owner && "flex-end"}
         sx={{ maxWidth: "80%" }}>
+        <Flex align={'flex-end'}>
+          <Title order={4} c="tokyo.2" fw={"400"}>
+            {data.user?.displayName}
+          </Title>
+          <Space w="sm" />
+          <Text c={theme.colors.tokyo[12]} fw="300" fz={"xs"}>
+            Just now
+          </Text>
+        </Flex>
         <Text
           bg={owner ? "blue" : "white"}
           p="10px 20px"

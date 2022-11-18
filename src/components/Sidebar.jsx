@@ -1,13 +1,14 @@
 import React from "react";
 import Searchbar from "./Searchbar";
 import Chats from "./Chats";
+import { Box } from "@mantine/core";
 
 const Sidebar = () => {
   return (
-    <div style={{ flex: 1, background: "orange" }}>
+    <Box style={{ flex: 1 }} bg="tokyo.3" >
       <Searchbar />
       <Chats />
-    </div>
+    </Box>
   );
 };
 
