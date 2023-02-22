@@ -11,7 +11,7 @@ export default function Register() {
   const [nameReady, setNameReady] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { register, handleSubmit, reset, watch, formState } = useForm({
+  const { register, handleSubmit formState } = useForm({
     defaultValues: {
       email: "",
       username: "",
@@ -90,7 +90,7 @@ export default function Register() {
 
   return (
     <main className={styles.container}>
-      <h3>Register</h3>
+      <h3>Create an account</h3>
       <form onSubmit={handleSubmit(registerUser)}>
         <fieldset>
           <label>Email</label>
@@ -125,7 +125,7 @@ export default function Register() {
           className={styles.submit}>
           Continue
         </button>
-        <a onClick={() => router.push(`/login`)}>Login</a>
+        <a onClick={() => router.push(`/login`)}>Already have an account?</a>
       </form>
     </main>
   );
