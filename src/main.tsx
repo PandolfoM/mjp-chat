@@ -7,6 +7,13 @@ const mantineTheme: MantineThemeOverride = {
   colorScheme: "dark",
   components: {
     Button: {
+      styles: {
+        root: {
+          ":active": {
+            transform: "none",
+          },
+        },
+      },
       defaultProps: {
         uppercase: true,
       },
@@ -17,9 +24,6 @@ const mantineTheme: MantineThemeOverride = {
             border: 0,
             ":hover": {
               backgroundColor: "transparent",
-            },
-            ":active": {
-              transform: "none",
             },
           },
         }),

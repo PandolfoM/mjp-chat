@@ -30,7 +30,7 @@ function Register() {
   };
 
   return (
-    <>
+    <div className="form_page">
       <form onSubmit={handleSubmit}>
         <>
           <TextInput
@@ -50,15 +50,17 @@ function Register() {
             {...form.getInputProps("password")}
           />
         </>
-        <Button type="submit">Register</Button>
+        <Button type="submit" fullWidth>
+          Register
+        </Button>
       </form>
-      <Text>
+      <p>
         Have an account?{" "}
         <Button compact variant="subtle">
           Login
         </Button>
-      </Text>
-    </>
+      </p>
+    </div>
   );
 }
 

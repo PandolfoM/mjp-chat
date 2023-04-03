@@ -1,5 +1,5 @@
 import * as Yup from "yup";
-import { Button, PasswordInput, Text, TextInput } from "@mantine/core";
+import { Box, Button, PasswordInput, Text, TextInput } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 
 const schema = Yup.object().shape({
@@ -22,7 +22,7 @@ function Login() {
   };
 
   return (
-    <>
+    <div className="form_page">
       <form onSubmit={handleSubmit}>
         <>
           <TextInput
@@ -36,15 +36,15 @@ function Login() {
             {...form.getInputProps("password")}
           />
         </>
-        <Button type="submit">Login</Button>
+        <Button type="submit" fullWidth>Login</Button>
       </form>
-      <Text>
+      <p>
         New around these parts?{" "}
         <Button compact variant="subtle">
           Register
         </Button>
-      </Text>
-    </>
+      </p>
+    </div>
   );
 }
 
