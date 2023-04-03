@@ -7,7 +7,13 @@
   margin: 0 auto;
 
   button {
-    
     margin-top: 0.5rem;
+  }
+}
+
+.home_page {
+  display: flex;
+  p {
+    padding-left: 100px;
   }
 }
