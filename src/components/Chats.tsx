@@ -1,19 +1,15 @@
 import { Box, createStyles } from "@mantine/core";
+import UserChat from "./UserChat";
 
 const useStyles = createStyles((theme) => ({
   container: {
     position: "absolute",
     padding: theme.spacing.sm,
     backgroundColor: "black",
-    maxHeight: "100vh",
+    height: "100vh",
     overflowY: "auto",
-  },
-  child: {
-    marginBottom: theme.spacing.sm,
-    backgroundColor: "red",
-    borderRadius: "30px",
-    minWidth: "55px",
-    minHeight: "55px",
+    maxWidth: "15rem",
+    minWidth: "15rem",
   },
 }));
 
@@ -22,23 +18,8 @@ function Chats() {
 
   return (
     <div className={classes.container}>
-      <Box className={classes.child}></Box>
-      <Box className={classes.child}></Box>
-      <Box className={classes.child}></Box>
-      <Box className={classes.child}></Box>
-      <Box className={classes.child}></Box>
-      <Box className={classes.child}></Box>
-      <Box className={classes.child}></Box>
-      <Box className={classes.child}></Box>
-      <Box className={classes.child}></Box>
-      <Box className={classes.child}></Box>
-      <Box className={classes.child}></Box>
-      <Box className={classes.child}></Box>
-      <Box className={classes.child}></Box>
-      <Box className={classes.child}></Box>
-      <Box className={classes.child}></Box>
-      <Box className={classes.child}></Box>
-      <Box className={classes.child}></Box>
+      <UserChat username={"Hello"} />
+      <UserChat username={"Jit Ski Yo Dawg Dawg Dawg"} />
     </div>
   );
 }
