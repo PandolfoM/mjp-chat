@@ -4,7 +4,7 @@ import { addDoc, collection } from "firebase/firestore";
 import { randomPfpColor } from "../utils/helpers";
 
 export default function useAuth() {
-  const newUser = async (
+  const registerUser = async (
     email: string,
     password: string,
     username: string
@@ -27,5 +27,7 @@ export default function useAuth() {
     }
   };
 
-  return { newUser };
+  const;
+
+  return { registerUser };
 }

@@ -30,7 +30,7 @@ function Register() {
   const navigate = useNavigate();
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const { newUser } = useAuth();
+  const { registerUser } = useAuth();
   const form = useForm({
     validate: yupResolver(schema),
     validateInputOnChange: true,
@@ -42,7 +42,11 @@ function Register() {
   });
 
   const handleSubmit = async (values: FormValues) => {
-    const res = await newUser(values.email, values.password, values.username);
+    const res = await registerUser(
+      values.email,
+      values.password,
+      values.username
+    );
     setLoading(true);
     if (res !== "success") {
       setError(res);
