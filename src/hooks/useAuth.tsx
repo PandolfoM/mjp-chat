@@ -1,4 +1,7 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { auth, db } from "../firebase";
 import { addDoc, collection } from "firebase/firestore";
 import { randomPfpColor } from "../utils/helpers";
@@ -27,7 +30,21 @@ export default function useAuth() {
     }
   };
 
-  const;
+  const loginUser = async (
+    email: string,
+    password: string
+  ): Promise<string> => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      return "success";
+    } catch (e) {
+      if (JSON.stringify(e).includes("wrong-password")) {
+        return "Incorrect password!";
+      } else {
+        return "No user with that email!";
+      }
+    }
+  };
 
-  return { registerUser };
+  return { registerUser, loginUser };
 }

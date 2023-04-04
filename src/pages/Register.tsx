@@ -50,9 +50,11 @@ function Register() {
     setLoading(true);
     if (res !== "success") {
       setError(res);
+      setLoading(false);
     } else {
       setLoading(false);
       form.reset();
+      navigate("/");
     }
   };
 

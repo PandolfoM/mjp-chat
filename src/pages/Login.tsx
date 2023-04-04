@@ -1,7 +1,15 @@
 import * as Yup from "yup";
-import { Box, Button, PasswordInput, Text, TextInput } from "@mantine/core";
+import {
+  Button,
+  LoadingOverlay,
+  PasswordInput,
+  Text,
+  TextInput,
+} from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
+import { useState } from "react";
 
 const schema = Yup.object().shape({
   email: Yup.string().required("Email is required"),
@@ -9,6 +17,11 @@ const schema = Yup.object().shape({
 });
 
 function Login() {
+  type FormValues = typeof form.values;
+  const navigate = useNavigate();
+  const { loginUser } = useAuth();
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const form = useForm({
     validate: yupResolver(schema),
     validateInputOnChange: true,
@@ -18,13 +31,23 @@ function Login() {
     },
   });
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
+  const handleSubmit = async (values: FormValues) => {
+    const res = await loginUser(values.email, values.password);
+    setLoading(true);
+    if (res !== "success") {
+      setError(res);
+      setLoading(false);
+    } else {
+      setLoading(false);
+      form.reset();
+      navigate("/");
+    }
   };
 
   return (
     <div className="form_page">
-      <form onSubmit={handleSubmit}>
+      <LoadingOverlay visible={loading} />
+      <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <>
           <TextInput
             withAsterisk
@@ -37,6 +60,7 @@ function Login() {
             {...form.getInputProps("password")}
           />
         </>
+        {error && <Text c="red">{error}</Text>}
         <Button type="submit" fullWidth>
           Login
         </Button>
