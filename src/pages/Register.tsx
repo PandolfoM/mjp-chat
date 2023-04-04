@@ -1,6 +1,7 @@
 import * as Yup from "yup";
 import { Button, PasswordInput, Text, TextInput } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
+import useAuth from "../hooks/useAuth";
 
 const schema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Email is required"),
@@ -14,24 +15,26 @@ const schema = Yup.object().shape({
 });
 
 function Register() {
+  type FormValues = typeof form.values;
+  const { newUser } = useAuth();
   const form = useForm({
     validate: yupResolver(schema),
     validateInputOnChange: true,
     initialValues: {
       email: "",
       password: "",
-      confirmPass: "",
       username: "",
     },
   });
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
+  const handleSubmit = async (values: FormValues) => {
+    const res = await newUser(values.email, values.password, values.username);
+    console.log(res);
   };
 
   return (
     <div className="form_page">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <>
           <TextInput
             withAsterisk
