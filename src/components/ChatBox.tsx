@@ -1,9 +1,8 @@
 import { Textarea, createStyles } from "@mantine/core";
-import React from "react";
 
 const useStyles = createStyles((theme) => ({
   container: {
-    padding: 16,
+    padding: theme.spacing.md,
   },
 }));
 

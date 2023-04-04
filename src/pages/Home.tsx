@@ -1,6 +1,7 @@
 import { createStyles } from "@mantine/core";
 import ChatBox from "../components/ChatBox";
 import Chats from "../components/Chats";
+import ChatMessages from "../components/ChatMessages";
 
 const useStyles = createStyles((theme) => ({
   home_page: {
@@ -24,6 +25,7 @@ function Home() {
     <div className={classes.home_page}>
       <Chats /> {/* Sidebar with all current chats */}
       <div className={classes.content}>
+        <ChatMessages />
         <ChatBox />
       </div>
     </div>

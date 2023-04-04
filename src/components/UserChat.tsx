@@ -4,7 +4,7 @@ const useStyles = createStyles((theme) => ({
   container: {
     display: "flex",
     alignItems: "center",
-    gap: 8,
+    gap: theme.spacing.xs,
     marginBottom: theme.spacing.sm,
   },
 }));
@@ -18,7 +18,7 @@ function UserChat(prop: Props) {
 
   return (
     <div className={classes.container}>
-      <Avatar size={48} alt={prop.username} radius="xl" color="red" />
+      <Avatar size={48} radius="xl" color="red" />
       <Text fw="bold" truncate>
         {prop.username}
       </Text>
