@@ -8,8 +8,9 @@ const useStyles = createStyles((theme) => ({
     backgroundColor: "black",
     height: "100vh",
     overflowY: "auto",
-    maxWidth: "15rem",
-    minWidth: "15rem",
+    maxWidth: 240,
+    minWidth: 240,
+    zIndex: 10,
   },
 }));
 
