@@ -1,4 +1,4 @@
-import { Box, createStyles } from "@mantine/core";
+import { createStyles } from "@mantine/core";
 import UserChat from "./UserChat";
 import CurrentUser from "./CurrentUser";
 
