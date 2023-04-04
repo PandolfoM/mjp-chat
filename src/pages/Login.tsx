@@ -1,6 +1,7 @@
 import * as Yup from "yup";
 import { Box, Button, PasswordInput, Text, TextInput } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
+import { Link } from "react-router-dom";
 
 const schema = Yup.object().shape({
   email: Yup.string().required("Email is required"),
@@ -36,14 +37,16 @@ function Login() {
             {...form.getInputProps("password")}
           />
         </>
-        <Button type="submit" fullWidth>Login</Button>
+        <Button type="submit" fullWidth>
+          Login
+        </Button>
       </form>
-      <p>
+      <Text>
         New around these parts?{" "}
         <Button compact variant="subtle">
-          Register
+          <Link to={"/register"}>Register</Link>
         </Button>
-      </p>
+      </Text>
     </div>
   );
 }

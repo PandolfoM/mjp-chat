@@ -1,7 +1,15 @@
 import * as Yup from "yup";
-import { Button, PasswordInput, Text, TextInput } from "@mantine/core";
+import {
+  Button,
+  LoadingOverlay,
+  PasswordInput,
+  Text,
+  TextInput,
+} from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
 import useAuth from "../hooks/useAuth";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const schema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Email is required"),
@@ -11,11 +19,17 @@ const schema = Yup.object().shape({
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
       "Does not meet requirements"
     ),
-  username: Yup.string().required().min(1),
+  username: Yup.string()
+    .required("Username is required")
+    .min(1, "Username must be at least 1 character"),
 });
 
 function Register() {
   type FormValues = typeof form.values;
+
+  const navigate = useNavigate();
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const { newUser } = useAuth();
   const form = useForm({
     validate: yupResolver(schema),
@@ -29,11 +43,18 @@ function Register() {
 
   const handleSubmit = async (values: FormValues) => {
     const res = await newUser(values.email, values.password, values.username);
-    console.log(res);
+    setLoading(true);
+    if (res !== "success") {
+      setError(res);
+    } else {
+      setLoading(false);
+      form.reset();
+    }
   };
 
   return (
     <div className="form_page">
+      <LoadingOverlay visible={loading} />
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <>
           <TextInput
@@ -52,17 +73,18 @@ function Register() {
             description="Must be at least 8 characters long and include at least one letter, number and special character"
             {...form.getInputProps("password")}
           />
+          {error && <Text c="red">{error}</Text>}
         </>
         <Button type="submit" fullWidth>
           Register
         </Button>
       </form>
-      <p>
+      <Text>
         Have an account?{" "}
         <Button compact variant="subtle">
-          Login
+          <Link to={"/login"}>Login</Link>
         </Button>
-      </p>
+      </Text>
     </div>
   );
 }

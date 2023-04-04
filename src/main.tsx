@@ -39,6 +39,12 @@ const mantineTheme: MantineThemeOverride = {
       },
     },
   },
+  globalStyles: (theme) => ({
+    a: {
+      textDecoration: "none",
+      color: "inherit",
+    },
+  }),
 };
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(

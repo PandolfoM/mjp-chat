@@ -4,23 +4,26 @@ import { addDoc, collection } from "firebase/firestore";
 import { randomPfpColor } from "../utils/helpers";
 
 export default function useAuth() {
-  const newUser = async (email: string, password: string, username: string) => {
+  const newUser = async (
+    email: string,
+    password: string,
+    username: string
+  ): Promise<string> => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       try {
         await addDoc(collection(db, "users"), {
           username,
           email,
-          password,
           color: randomPfpColor(),
           status: "online",
         });
-        return true;
+        return "success";
       } catch (e) {
-        return e;
+        return "There has been an error!";
       }
     } catch (e) {
-      return e;
+      return "Email is already being used!";
     }
   };
 
