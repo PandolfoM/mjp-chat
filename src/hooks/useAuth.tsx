@@ -3,7 +3,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth, db } from "../firebase";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { randomPfpColor } from "../utils/helpers";
 
 export default function useAuth() {
@@ -13,16 +13,26 @@ export default function useAuth() {
     username: string
   ): Promise<string> => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const createUser = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       try {
         await addDoc(collection(db, "users"), {
           username,
           email,
           color: randomPfpColor(),
           status: "online",
+          uid: createUser.user.uid,
+        });
+        await setDoc(doc(db, "usernames", username), {
+          uid: createUser.user.uid,
         });
         return "success";
       } catch (e) {
+        console.log(e);
+
         return "There has been an error!";
       }
     } catch (e) {
