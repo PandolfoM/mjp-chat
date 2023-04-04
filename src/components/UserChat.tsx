@@ -5,7 +5,7 @@ const useStyles = createStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     gap: theme.spacing.xs,
-    marginBottom: theme.spacing.sm,
+    padding: theme.spacing.xs,
   },
 }));
 

@@ -8,7 +8,6 @@ const useStyles = createStyles((theme) => ({
     display: "flex",
   },
   content: {
-    marginLeft: 240,
     flex: 1,
     height: "100vh",
     display: "flex",

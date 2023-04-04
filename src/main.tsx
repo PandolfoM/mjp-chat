@@ -6,6 +6,15 @@ import { MantineProvider, MantineThemeOverride } from "@mantine/core";
 const mantineTheme: MantineThemeOverride = {
   colorScheme: "dark",
   components: {
+    ActionIcon: {
+      styles: {
+        root: {
+          ":active": {
+            transform: "none",
+          },
+        },
+      },
+    },
     Button: {
       styles: {
         root: {
