@@ -21,8 +21,6 @@ const useStyles = createStyles((theme) => ({
 
 function CurrentUser() {
   const { currentUser } = useContext(AuthContext);
-  console.log(currentUser);
-
   const { classes } = useStyles();
   const [opened, { open, close }] = useDisclosure(false);
 

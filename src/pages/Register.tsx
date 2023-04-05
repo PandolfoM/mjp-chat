@@ -42,12 +42,12 @@ function Register() {
   });
 
   const handleSubmit = async (values: FormValues) => {
+    setLoading(true);
     const res = await registerUser(
       values.email,
       values.password,
       values.username
     );
-    setLoading(true);
     if (res !== "success") {
       setError(res);
       setLoading(false);

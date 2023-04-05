@@ -59,8 +59,8 @@ export default function useAuth() {
         email,
         password
       );
+      setCurrentUser(loggedInUser.user);
       return "success";
-      setCurrentUser(loggedInUser);
     } catch (e) {
       if (JSON.stringify(e).includes("wrong-password")) {
         return "Incorrect password!";
