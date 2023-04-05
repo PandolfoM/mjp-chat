@@ -29,9 +29,9 @@ function CurrentUser() {
       <SettingsModal opened={opened} close={close} />
       <div className={classes.container}>
         <div className={classes.user}>
-          <Avatar size={35} radius="xl" color="red" />
+          <Avatar size={35} radius="xl" color={currentUser?.color} />
           <Text fw="bold" fz="xs" truncate>
-            {currentUser?.displayName || "Error"}
+            {currentUser?.displayName}
           </Text>
         </div>
         <ActionIcon variant="subtle" onClick={open}>
