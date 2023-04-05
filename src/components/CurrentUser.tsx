@@ -2,6 +2,8 @@ import { ActionIcon, Avatar, Text, createStyles } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Settings } from "react-feather";
 import SettingsModal from "./SettingsModal";
+import { useContext } from "react";
+import { AuthContext } from "../auth/context";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -18,6 +20,9 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function CurrentUser() {
+  const { currentUser } = useContext(AuthContext);
+  console.log(currentUser);
+
   const { classes } = useStyles();
   const [opened, { open, close }] = useDisclosure(false);
 
@@ -28,7 +33,7 @@ function CurrentUser() {
         <div className={classes.user}>
           <Avatar size={35} radius="xl" color="red" />
           <Text fw="bold" fz="xs" truncate>
-            Matthew Pandolfo
+            {currentUser?.displayName || "Error"}
           </Text>
         </div>
         <ActionIcon variant="subtle" onClick={open}>

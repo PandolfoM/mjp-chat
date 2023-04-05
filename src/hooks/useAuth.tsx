@@ -1,12 +1,17 @@
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
 import { auth, db } from "../firebase";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { randomPfpColor } from "../utils/helpers";
+import { useContext } from "react";
+import { AuthContext } from "../auth/context";
 
 export default function useAuth() {
+  const { setCurrentUser } = useContext(AuthContext);
+
   const registerUser = async (
     email: string,
     password: string,
@@ -29,6 +34,10 @@ export default function useAuth() {
         await setDoc(doc(db, "usernames", username), {
           uid: createUser.user.uid,
         });
+        await updateProfile(createUser.user, {
+          displayName: username,
+        });
+        setCurrentUser(createUser.user);
         return "success";
       } catch (e) {
         console.log(e);
@@ -45,8 +54,13 @@ export default function useAuth() {
     password: string
   ): Promise<string> => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const loggedInUser = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       return "success";
+      setCurrentUser(loggedInUser);
     } catch (e) {
       if (JSON.stringify(e).includes("wrong-password")) {
         return "Incorrect password!";
