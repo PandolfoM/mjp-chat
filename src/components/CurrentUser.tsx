@@ -1,10 +1,16 @@
-import { ActionIcon, Avatar, Text, createStyles } from "@mantine/core";
+import {
+  ActionIcon,
+  Avatar,
+  Indicator,
+  Text,
+  createStyles,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Settings } from "react-feather";
 import SettingsModal from "./SettingsModal";
 import { useContext } from "react";
 import { AuthContext } from "../auth/context";
-import { UserDoc } from "../pages/Home";
+import { UserDoc } from "../utils/interfaces";
 
 type Props = {
   userDoc: UserDoc | null;
@@ -34,7 +40,14 @@ function CurrentUser(props: Props) {
       <SettingsModal opened={opened} close={close} />
       <div className={classes.container}>
         <div className={classes.user}>
-          <Avatar size={35} radius="xl" color={props.userDoc?.color} />
+          <Indicator
+            withBorder
+            position="bottom-end"
+            offset={5}
+            size={13}
+            color={props.userDoc?.status === "idle" ? "yellow" : "green"}>
+            <Avatar size={35} radius="xl" color={props.userDoc?.color} />
+          </Indicator>
           <Text fw="bold" fz="xs" truncate>
             {currentUser?.displayName}
           </Text>

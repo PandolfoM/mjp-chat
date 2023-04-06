@@ -1,7 +1,7 @@
 import { createStyles } from "@mantine/core";
 import UserChat from "./UserChat";
 import CurrentUser from "./CurrentUser";
-import { UserDoc } from "../pages/Home";
+import { UserDoc } from "../utils/interfaces";
 
 type Props = {
   userDoc: UserDoc | null;

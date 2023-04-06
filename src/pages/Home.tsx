@@ -6,6 +6,8 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../auth/context";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import { useIdle } from "@mantine/hooks";
+import { UserDoc } from "../utils/interfaces";
 
 const useStyles = createStyles((theme) => ({
   home_page: {
@@ -20,14 +22,6 @@ const useStyles = createStyles((theme) => ({
     overflow: "hidden",
   },
 }));
-
-export interface UserDoc {
-  color: string;
-  email: string;
-  status: string;
-  uid: string;
-  username: string;
-}
 
 type Props = {
   userDoc: UserDoc | null;
