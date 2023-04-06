@@ -22,7 +22,7 @@ function UserChat(props: Props) {
 
   return (
     <div className={classes.container}>
-      <StatusIndicator user={props.user}>
+      <StatusIndicator user={props.user} size={18} offset={7}>
         <Avatar size={48} radius="xl" color={props.user.color} />
       </StatusIndicator>
       <Text fw="bold" truncate>

@@ -1,16 +1,11 @@
-import {
-  ActionIcon,
-  Avatar,
-  Indicator,
-  Text,
-  createStyles,
-} from "@mantine/core";
+import { ActionIcon, Avatar, Text, createStyles } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Settings } from "react-feather";
 import SettingsModal from "./SettingsModal";
 import { useContext } from "react";
 import { AuthContext } from "../auth/context";
 import { DocumentData } from "firebase/firestore";
+import StatusIndicator from "./StatusIndicator";
 
 type Props = {
   userDoc: DocumentData | undefined;
@@ -40,20 +35,9 @@ function CurrentUser(props: Props) {
       <SettingsModal opened={opened} close={close} />
       <div className={classes.container}>
         <div className={classes.user}>
-          <Indicator
-            withBorder
-            position="bottom-end"
-            offset={5}
-            size={13}
-            color={
-              props.userDoc?.status === "idle"
-                ? "yellow"
-                : props.userDoc?.status === "offline"
-                ? "grey"
-                : "green"
-            }>
+          <StatusIndicator user={currentUser} borderColor={6}>
             <Avatar size={35} radius="xl" color={props.userDoc?.color} />
-          </Indicator>
+          </StatusIndicator>
           <Text fw="bold" fz="xs" truncate>
             {currentUser?.displayName}
           </Text>
