@@ -6,8 +6,6 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../auth/context";
 import { DocumentData, doc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
-import { useIdle } from "@mantine/hooks";
-import useStatus from "../hooks/useStatus";
 
 const useStyles = createStyles(() => ({
   home_page: {
@@ -26,13 +24,9 @@ const useStyles = createStyles(() => ({
 function Home() {
   const [userDoc, setUserDoc] = useState<DocumentData | undefined>(undefined);
   const { currentUser, loading } = useContext(AuthContext);
-  const { updateStatus } = useStatus();
   const { classes } = useStyles();
-  const idle = useIdle(600000);
-  updateStatus(idle ? "idle" : "online");
 
   useEffect(() => {
-    window.addEventListener("beforeunload", () => updateStatus("offline"));
     const unsub = async () => {
       if (currentUser) {
         const unsub = onSnapshot(doc(db, "users", currentUser?.uid), (doc) => {

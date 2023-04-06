@@ -2,13 +2,9 @@ import { onAuthStateChanged } from "firebase/auth";
 import { createContext, useEffect, useState } from "react";
 import { auth } from "../firebase";
 
-type Props = {
-  children: any;
-};
-
 export const AuthContext = createContext<any>(null);
 
-export const AuthContextProvider = (prop: Props) => {
+export const AuthContextProvider = (props: React.PropsWithChildren<{}>) => {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -29,7 +25,7 @@ export const AuthContextProvider = (prop: Props) => {
 
   return (
     <AuthContext.Provider value={{ currentUser, setCurrentUser, loading }}>
-      {prop.children}
+      {props.children}
     </AuthContext.Provider>
   );
 };
