@@ -2,9 +2,10 @@ import { LoadingOverlay, createStyles } from "@mantine/core";
 import ChatBox from "../components/ChatBox";
 import Chats from "../components/Chats";
 import ChatMessages from "../components/ChatMessages";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../auth/context";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
 const useStyles = createStyles((theme) => ({
   home_page: {
@@ -20,24 +21,41 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function Home() {
+export interface UserDoc {
+  color: string;
+  email: string;
+  status: string;
+  uid: string;
+  username: string;
+}
+
+type Props = {
+  userDoc: UserDoc | null;
+};
+
+function Home(props: Props) {
+  const [userDoc, setUserDoc] = useState<UserDoc | null>(null);
   const { currentUser, loading } = useContext(AuthContext);
   const { classes } = useStyles();
-  const navigate = useNavigate();
+  const { getCurrentUser } = useAuth();
 
   useEffect(() => {
-    if (!loading) {
-      console.log(currentUser);
-      if (!currentUser) {
-        navigate("/login");
+    const unsub = async () => {
+      if (currentUser) {
+        const getData = await getCurrentUser();
+        setUserDoc(getData);
       }
-    }
-  }, [loading]);
+    };
+
+    return () => {
+      unsub();
+    };
+  }, []);
 
   return (
     <div className={classes.home_page}>
       <LoadingOverlay visible={loading} overlayOpacity={1} />
-      <Chats /> {/* Sidebar with all current chats */}
+      <Chats userDoc={userDoc} /> {/* Sidebar with all current chats */}
       <div className={classes.content}>
         <ChatMessages />
         <ChatBox />

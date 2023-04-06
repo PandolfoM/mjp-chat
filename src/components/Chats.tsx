@@ -1,6 +1,11 @@
 import { createStyles } from "@mantine/core";
 import UserChat from "./UserChat";
 import CurrentUser from "./CurrentUser";
+import { UserDoc } from "../pages/Home";
+
+type Props = {
+  userDoc: UserDoc | null;
+};
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -26,7 +31,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function Chats() {
+function Chats(props: Props) {
   const { classes } = useStyles();
 
   return (
@@ -37,7 +42,7 @@ function Chats() {
         <UserChat username={"Last"} />
       </div>
       <div className={classes.currentUserContainer}>
-        <CurrentUser />
+        <CurrentUser userDoc={props.userDoc} />
       </div>
     </div>
   );

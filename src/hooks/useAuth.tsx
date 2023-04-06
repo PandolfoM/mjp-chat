@@ -4,13 +4,13 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth, db } from "../firebase";
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
 import { randomPfpColor } from "../utils/helpers";
 import { useContext } from "react";
 import { AuthContext } from "../auth/context";
 
 export default function useAuth() {
-  const { setCurrentUser } = useContext(AuthContext);
+  const { currentUser, setCurrentUser } = useContext(AuthContext);
 
   const registerUser = async (
     email: string,
@@ -24,7 +24,7 @@ export default function useAuth() {
         password
       );
       try {
-        await addDoc(collection(db, "users"), {
+        await setDoc(doc(db, "users", createUser.user.uid), {
           username,
           email,
           color: randomPfpColor(),
@@ -70,5 +70,15 @@ export default function useAuth() {
     }
   };
 
-  return { registerUser, loginUser };
+  const getCurrentUser = async (): Promise<any> => {
+    const docRef = doc(db, "users", currentUser?.uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return docSnap.data();
+    } else {
+      return null;
+    }
+  };
+
+  return { registerUser, loginUser, getCurrentUser };
 }

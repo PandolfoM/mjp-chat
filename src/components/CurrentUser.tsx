@@ -4,6 +4,11 @@ import { Settings } from "react-feather";
 import SettingsModal from "./SettingsModal";
 import { useContext } from "react";
 import { AuthContext } from "../auth/context";
+import { UserDoc } from "../pages/Home";
+
+type Props = {
+  userDoc: UserDoc | null;
+};
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -19,7 +24,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function CurrentUser() {
+function CurrentUser(props: Props) {
   const { currentUser } = useContext(AuthContext);
   const { classes } = useStyles();
   const [opened, { open, close }] = useDisclosure(false);
@@ -29,7 +34,7 @@ function CurrentUser() {
       <SettingsModal opened={opened} close={close} />
       <div className={classes.container}>
         <div className={classes.user}>
-          <Avatar size={35} radius="xl" color={currentUser?.color} />
+          <Avatar size={35} radius="xl" color={props.userDoc?.color} />
           <Text fw="bold" fz="xs" truncate>
             {currentUser?.displayName}
           </Text>

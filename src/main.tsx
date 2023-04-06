@@ -40,7 +40,7 @@ const mantineTheme: MantineThemeOverride = {
       },
     },
   },
-  globalStyles: (theme) => ({
+  globalStyles: () => ({
     a: {
       textDecoration: "none",
       color: "inherit",
