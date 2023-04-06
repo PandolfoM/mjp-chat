@@ -1,7 +1,11 @@
-import { createStyles } from "@mantine/core";
+import { LoadingOverlay, Title, createStyles } from "@mantine/core";
 import UserChat from "./UserChat";
 import CurrentUser from "./CurrentUser";
 import { DocumentData } from "firebase/firestore";
+import { useContext, useEffect, useState } from "react";
+import useAuth from "../hooks/useAuth";
+import { AuthContext } from "../auth/context";
+import { User } from "../utils/interfaces";
 
 type Props = {
   userDoc: DocumentData | undefined;
@@ -32,14 +36,29 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function Chats(props: Props) {
+  const [friends, setFriends] = useState<Array<User>>([]);
+  const { currentUser } = useContext(AuthContext);
   const { classes } = useStyles();
+  const { getFriends } = useAuth();
+
+  useEffect(() => {
+    const unsub = async () => {
+      await getFriends(setFriends);
+    };
+
+    if (currentUser) {
+      return () => {
+        unsub();
+      };
+    }
+  }, []);
 
   return (
     <div className={classes.container}>
       <div className={classes.allChats}>
-        <UserChat username={"First"} />
-        <UserChat username={"LONG USERNAME LONG USERNAME"} />
-        <UserChat username={"Last"} />
+        {friends.map((i: User) => (
+          <UserChat user={i} key={i.uid} />
+        ))}
       </div>
       <div className={classes.currentUserContainer}>
         <CurrentUser userDoc={props.userDoc} />

@@ -1,4 +1,5 @@
-import { Avatar, Text, createStyles } from "@mantine/core";
+import { Avatar, Skeleton, Text, createStyles } from "@mantine/core";
+import { User } from "../utils/interfaces";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -10,17 +11,17 @@ const useStyles = createStyles((theme) => ({
 }));
 
 type Props = {
-  username: string;
+  user: User;
 };
 
-function UserChat(prop: Props) {
+function UserChat(props: Props) {
   const { classes } = useStyles();
 
   return (
     <div className={classes.container}>
       <Avatar size={48} radius="xl" color="red" />
       <Text fw="bold" truncate>
-        {prop.username}
+        {props.user?.username}
       </Text>
     </div>
   );

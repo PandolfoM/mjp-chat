@@ -5,18 +5,18 @@ import {
 } from "firebase/auth";
 import { auth, db } from "../firebase";
 import {
-  addDoc,
   collection,
   doc,
-  getDoc,
+  getDocs,
   onSnapshot,
+  query,
   setDoc,
+  where,
 } from "firebase/firestore";
 import { randomPfpColor } from "../utils/helpers";
 import { useContext } from "react";
 import { AuthContext } from "../auth/context";
-import { UserDoc } from "../utils/interfaces";
-
+import { User } from "../utils/interfaces";
 
 export default function useAuth() {
   const { currentUser, setCurrentUser } = useContext(AuthContext);
@@ -79,19 +79,28 @@ export default function useAuth() {
     }
   };
 
-  const getCurrentUser = async (): Promise<any> => {
-    // const docRef = doc(db, "users", currentUser?.uid);
-    // const docSnap = await getDoc(docRef);
-    // if (docSnap.exists()) {
-    //   return docSnap.data();
-    // } else {
-    //   return null;
-    // }
-    const unsub = onSnapshot(doc(db, "users", currentUser?.uid), (doc) => {
-      return doc.data();
-    });
-    console.log(unsub());
+  const getFriends = async (setFriends: any) => {
+    try {
+      const uidArr: Array<string> = [];
+      const docSnap = await getDocs(
+        collection(db, "users", currentUser.uid, "friends")
+      );
+      docSnap.docs.map((d) => {
+        uidArr.push(d.data().uid);
+      });
+
+      for (let i = 0; i < uidArr.length; i++) {
+        const q = query(collection(db, "users"), where("uid", "==", uidArr[i]));
+        onSnapshot(q, (querySnapshot) => {
+          querySnapshot.forEach((e) => {
+            setFriends((current: Array<User>) => [...current, e.data()]);
+          });
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
-  return { registerUser, loginUser, getCurrentUser };
+  return { registerUser, loginUser, getFriends };
 }
