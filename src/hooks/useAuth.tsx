@@ -5,6 +5,7 @@ import {
 } from "firebase/auth";
 import { auth, db } from "../firebase";
 import {
+  DocumentData,
   collection,
   doc,
   getDocs,
@@ -89,16 +90,18 @@ export default function useAuth() {
         uidArr.push(d.data().uid);
       });
 
-      for (let i = 0; i < uidArr.length; i++) {
-        const q = query(collection(db, "users"), where("uid", "==", uidArr[i]));
-        onSnapshot(q, (querySnapshot) => {
-          querySnapshot.forEach((e) => {
-            setFriends((current: Array<User>) => [...current, e.data()]);
-          });
+      const q = query(collection(db, "users"), where("uid", "in", uidArr));
+
+      onSnapshot(q, (querySnapshot) => {
+        const userFriends: Array<User> = [];
+        querySnapshot.forEach((e) => {
+          userFriends.push(e.data() as User);
         });
-      }
+        setFriends(userFriends);
+      });
     } catch (e) {
       console.log(e);
+      return ["error"];
     }
   };
 

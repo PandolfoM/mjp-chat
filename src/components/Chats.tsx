@@ -1,4 +1,4 @@
-import { LoadingOverlay, Title, createStyles } from "@mantine/core";
+import { createStyles } from "@mantine/core";
 import UserChat from "./UserChat";
 import CurrentUser from "./CurrentUser";
 import { DocumentData } from "firebase/firestore";
@@ -56,8 +56,8 @@ function Chats(props: Props) {
   return (
     <div className={classes.container}>
       <div className={classes.allChats}>
-        {friends.map((i: User) => (
-          <UserChat user={i} key={i.uid} />
+        {friends?.map((i: User) => (
+          <UserChat user={i} userDoc={props.userDoc} key={i.uid} />
         ))}
       </div>
       <div className={classes.currentUserContainer}>

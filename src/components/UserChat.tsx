@@ -1,5 +1,7 @@
 import { Avatar, Skeleton, Text, createStyles } from "@mantine/core";
 import { User } from "../utils/interfaces";
+import StatusIndicator from "./StatusIndicator";
+import { DocumentData } from "firebase/firestore";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -12,6 +14,7 @@ const useStyles = createStyles((theme) => ({
 
 type Props = {
   user: User;
+  userDoc: DocumentData | undefined;
 };
 
 function UserChat(props: Props) {
@@ -19,9 +22,11 @@ function UserChat(props: Props) {
 
   return (
     <div className={classes.container}>
-      <Avatar size={48} radius="xl" color="red" />
+      <StatusIndicator user={props.user}>
+        <Avatar size={48} radius="xl" color={props.user.color} />
+      </StatusIndicator>
       <Text fw="bold" truncate>
-        {props.user?.username}
+        {props.user.username}
       </Text>
     </div>
   );
