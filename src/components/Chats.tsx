@@ -1,10 +1,10 @@
 import { createStyles } from "@mantine/core";
 import UserChat from "./UserChat";
 import CurrentUser from "./CurrentUser";
-import { UserDoc } from "../utils/interfaces";
+import { DocumentData } from "firebase/firestore";
 
 type Props = {
-  userDoc: UserDoc | null;
+  userDoc: DocumentData | undefined;
 };
 
 const useStyles = createStyles((theme) => ({

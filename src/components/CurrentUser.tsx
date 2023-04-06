@@ -10,10 +10,10 @@ import { Settings } from "react-feather";
 import SettingsModal from "./SettingsModal";
 import { useContext } from "react";
 import { AuthContext } from "../auth/context";
-import { UserDoc } from "../utils/interfaces";
+import { DocumentData } from "firebase/firestore";
 
 type Props = {
-  userDoc: UserDoc | null;
+  userDoc: DocumentData | undefined;
 };
 
 const useStyles = createStyles((theme) => ({
@@ -45,7 +45,13 @@ function CurrentUser(props: Props) {
             position="bottom-end"
             offset={5}
             size={13}
-            color={props.userDoc?.status === "idle" ? "yellow" : "green"}>
+            color={
+              props.userDoc?.status === "idle"
+                ? "yellow"
+                : props.userDoc?.status === "offline"
+                ? "grey"
+                : "green"
+            }>
             <Avatar size={35} radius="xl" color={props.userDoc?.color} />
           </Indicator>
           <Text fw="bold" fz="xs" truncate>

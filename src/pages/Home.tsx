@@ -4,10 +4,12 @@ import Chats from "../components/Chats";
 import ChatMessages from "../components/ChatMessages";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../auth/context";
-import useAuth from "../hooks/useAuth";
-import { UserDoc } from "../utils/interfaces";
+import { DocumentData, doc, onSnapshot } from "firebase/firestore";
+import { db } from "../firebase";
+import { useIdle } from "@mantine/hooks";
+import useStatus from "../hooks/useStatus";
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles(() => ({
   home_page: {
     display: "flex",
   },
@@ -22,16 +24,24 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function Home() {
-  const [userDoc, setUserDoc] = useState<UserDoc | null>(null);
+  const [userDoc, setUserDoc] = useState<DocumentData | undefined>(undefined);
   const { currentUser, loading } = useContext(AuthContext);
+  const { updateStatus } = useStatus();
   const { classes } = useStyles();
-  const { getCurrentUser } = useAuth();
+  const idle = useIdle(600000);
+  updateStatus(idle ? "idle" : "online");
 
   useEffect(() => {
+    window.addEventListener("beforeunload", () => updateStatus("offline"));
     const unsub = async () => {
       if (currentUser) {
-        const getData = await getCurrentUser();
-        setUserDoc(getData);
+        const unsub = onSnapshot(doc(db, "users", currentUser?.uid), (doc) => {
+          setUserDoc(doc.data());
+        });
+
+        return () => {
+          unsub();
+        };
       }
     };
 

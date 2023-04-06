@@ -4,10 +4,19 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth, db } from "../firebase";
-import { addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  setDoc,
+} from "firebase/firestore";
 import { randomPfpColor } from "../utils/helpers";
 import { useContext } from "react";
 import { AuthContext } from "../auth/context";
+import { UserDoc } from "../utils/interfaces";
+
 
 export default function useAuth() {
   const { currentUser, setCurrentUser } = useContext(AuthContext);
@@ -71,13 +80,17 @@ export default function useAuth() {
   };
 
   const getCurrentUser = async (): Promise<any> => {
-    const docRef = doc(db, "users", currentUser?.uid);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      return docSnap.data();
-    } else {
-      return null;
-    }
+    // const docRef = doc(db, "users", currentUser?.uid);
+    // const docSnap = await getDoc(docRef);
+    // if (docSnap.exists()) {
+    //   return docSnap.data();
+    // } else {
+    //   return null;
+    // }
+    const unsub = onSnapshot(doc(db, "users", currentUser?.uid), (doc) => {
+      return doc.data();
+    });
+    console.log(unsub());
   };
 
   return { registerUser, loginUser, getCurrentUser };
