@@ -4,9 +4,7 @@ import Chats from "../components/Chats";
 import ChatMessages from "../components/ChatMessages";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../auth/context";
-import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
-import { useIdle } from "@mantine/hooks";
 import { UserDoc } from "../utils/interfaces";
 
 const useStyles = createStyles((theme) => ({
@@ -23,11 +21,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-type Props = {
-  userDoc: UserDoc | null;
-};
-
-function Home(props: Props) {
+function Home() {
   const [userDoc, setUserDoc] = useState<UserDoc | null>(null);
   const { currentUser, loading } = useContext(AuthContext);
   const { classes } = useStyles();
