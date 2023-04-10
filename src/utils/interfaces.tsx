@@ -4,4 +4,5 @@ export interface User {
   email: string;
   uid: string;
   username: string;
+  chats?: Array<string>;
 }

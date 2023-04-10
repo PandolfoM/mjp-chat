@@ -53,6 +53,10 @@ function Chats(props: Props) {
     }
   }, []);
 
+  // useEffect(() => {
+  //   console.log(props.userDoc);
+  // }, [friends]);
+
   return (
     <div className={classes.container}>
       <div className={classes.allChats}>
