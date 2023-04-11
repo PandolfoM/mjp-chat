@@ -2,8 +2,7 @@ import { createStyles } from "@mantine/core";
 import UserChat from "./UserChat";
 import CurrentUser from "./CurrentUser";
 import { DocumentData } from "firebase/firestore";
-import { useContext, useEffect, useState } from "react";
-import useAuth from "../hooks/useAuth";
+import { useContext } from "react";
 import { AuthContext } from "../auth/context";
 import { User } from "../utils/interfaces";
 
@@ -38,7 +37,6 @@ const useStyles = createStyles((theme) => ({
 function Chats(props: Props) {
   const { friends } = useContext(AuthContext);
   const { classes } = useStyles();
-  const { getFriends } = useAuth();
 
   return (
     <div className={classes.container}>
