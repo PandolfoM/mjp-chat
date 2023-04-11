@@ -1,8 +1,9 @@
 import { Avatar, Text, createStyles } from "@mantine/core";
-import { DocumentData } from "firebase/firestore";
+import { DocumentData, Timestamp } from "firebase/firestore";
 import { useContext } from "react";
 import { AuthContext } from "../auth/context";
 import { StatusContext } from "../context/StatusContext";
+import { formatTime } from "../utils/helpers";
 
 interface ChatData {
   sentAt: string;
@@ -57,7 +58,7 @@ function ChatMessages(props: Props) {
             <div className={classes.messageName}>
               <Text fw="bold">{getUser(i.sentBy)}</Text>
               <Text fz="xs" c="dimmed">
-                Now
+                {formatTime(i.sentAt)}
               </Text>
             </div>
             <Text>{i.text}</Text>
