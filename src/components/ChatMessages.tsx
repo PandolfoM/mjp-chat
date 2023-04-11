@@ -39,7 +39,7 @@ function ChatMessages(props: Props) {
   const { classes } = useStyles();
   const { friends, currentUser } = useContext(AuthContext);
 
-  const getUser = (uid: string) => {
+  const getUser = (uid: string): string => {
     if (uid === currentUser.uid) return props.userDoc?.username;
 
     const userId = friends.filter((i) => {
@@ -49,11 +49,21 @@ function ChatMessages(props: Props) {
     return userId[0].username;
   };
 
+  const getColor = (uid: string): string => {
+    if (uid === currentUser.uid) return props.userDoc?.color;
+
+    const userColor = friends.filter((i) => {
+      return i.uid === uid;
+    });
+
+    return userColor[0].color;
+  };
+
   return (
     <div className={classes.container}>
       {props.chatData?.map((i: ChatData) => (
         <div className={classes.message} key={i.sentAt}>
-          <Avatar size={48} radius="xl" color="red" />
+          <Avatar size={48} radius="xl" color={getColor(i.sentBy)} />
           <div>
             <div className={classes.messageName}>
               <Text fw="bold">{getUser(i.sentBy)}</Text>
