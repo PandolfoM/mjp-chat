@@ -23,8 +23,8 @@ const useStyles = createStyles(() => ({
 }));
 
 function Home() {
-  const [currentChatData, setCurrentChatData] = useState<DocumentData[]>();
   const [userDoc, setUserDoc] = useState<DocumentData | undefined>(undefined);
+  const [messages, setMessages] = useState<DocumentData[]>([]);
   const { currentUser, loading } = useContext(AuthContext);
   const { currentChat } = useContext(StatusContext);
   const { classes } = useStyles();
@@ -48,14 +48,12 @@ function Home() {
   }, []);
 
   useEffect(() => {
-    const arr: Array<DocumentData> = [];
     const unsub = async () => {
       onSnapshot(collection(db, "chats", currentChat, "messages"), (doc) => {
+        setMessages([]);
         doc.forEach((e) => {
-          arr.push(e.data());
+          setMessages((current) => [...current, e.data()]);
         });
-
-        return setCurrentChatData(arr);
       });
     };
 
@@ -67,7 +65,7 @@ function Home() {
       <LoadingOverlay visible={loading} overlayOpacity={1} />
       <Chats userDoc={userDoc} /> {/* Sidebar with all current chats */}
       <div className={classes.content}>
-        <ChatMessages chatData={currentChatData}  userDoc={userDoc}/>
+        <ChatMessages chatData={messages} userDoc={userDoc} />
         <ChatBox />
       </div>
     </div>
