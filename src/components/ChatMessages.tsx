@@ -1,11 +1,26 @@
 import { Avatar, Text, createStyles } from "@mantine/core";
+import { DocumentData } from "firebase/firestore";
+import { useContext } from "react";
+import { AuthContext } from "../auth/context";
+import { StatusContext } from "../context/StatusContext";
+
+interface ChatData {
+  sentAt: string;
+  sentBy: string;
+  text: string;
+}
+
+type Props = {
+  chatData: DocumentData | undefined;
+  userDoc: DocumentData | undefined;
+};
 
 const useStyles = createStyles((theme) => ({
   container: {
     flex: 1,
     overflowY: "auto",
   },
-  povMessage: {
+  message: {
     width: "100%",
     minHeight: 50,
     display: "flex",
@@ -19,23 +34,36 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function ChatMessages() {
+function ChatMessages(props: Props) {
   const { classes } = useStyles();
+  const { friends, currentUser } = useContext(AuthContext);
+
+  const getUser = (uid: string) => {
+    if (uid === currentUser.uid) return props.userDoc?.username;
+
+    const userId = friends.filter((i) => {
+      return i.uid === uid;
+    });
+
+    return userId[0].username;
+  };
 
   return (
     <div className={classes.container}>
-      <div className={classes.povMessage}>
-        <Avatar size={48} radius="xl" color="red" />
-        <div>
-          <div className={classes.messageName}>
-            <Text fw="bold">Matthew Pandolfo</Text>
-            <Text fz="xs" c="dimmed">
-              Now
-            </Text>
+      {props.chatData?.map((i: ChatData) => (
+        <div className={classes.message} key={i.sentAt}>
+          <Avatar size={48} radius="xl" color="red" />
+          <div>
+            <div className={classes.messageName}>
+              <Text fw="bold">{getUser(i.sentBy)}</Text>
+              <Text fz="xs" c="dimmed">
+                Now
+              </Text>
+            </div>
+            <Text>{i.text}</Text>
           </div>
-          <Text>This is my test message thank you!</Text>
         </div>
-      </div>
+      ))}
     </div>
   );
 }

@@ -4,8 +4,9 @@ import Chats from "../components/Chats";
 import ChatMessages from "../components/ChatMessages";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../auth/context";
-import { DocumentData, doc, onSnapshot } from "firebase/firestore";
+import { DocumentData, collection, doc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
+import { StatusContext } from "../context/StatusContext";
 
 const useStyles = createStyles(() => ({
   home_page: {
@@ -22,8 +23,10 @@ const useStyles = createStyles(() => ({
 }));
 
 function Home() {
+  const [currentChatData, setCurrentChatData] = useState<DocumentData[]>();
   const [userDoc, setUserDoc] = useState<DocumentData | undefined>(undefined);
   const { currentUser, loading } = useContext(AuthContext);
+  const { currentChat } = useContext(StatusContext);
   const { classes } = useStyles();
 
   useEffect(() => {
@@ -44,12 +47,27 @@ function Home() {
     };
   }, []);
 
+  useEffect(() => {
+    const arr: Array<DocumentData> = [];
+    const unsub = async () => {
+      onSnapshot(collection(db, "chats", currentChat, "messages"), (doc) => {
+        doc.forEach((e) => {
+          arr.push(e.data());
+        });
+
+        return setCurrentChatData(arr);
+      });
+    };
+
+    currentChat && unsub();
+  }, [currentChat]);
+
   return (
     <div className={classes.home_page}>
       <LoadingOverlay visible={loading} overlayOpacity={1} />
       <Chats userDoc={userDoc} /> {/* Sidebar with all current chats */}
       <div className={classes.content}>
-        <ChatMessages />
+        <ChatMessages chatData={currentChatData}  userDoc={userDoc}/>
         <ChatBox />
       </div>
     </div>

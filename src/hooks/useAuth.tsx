@@ -18,9 +18,11 @@ import { randomPfpColor } from "../utils/helpers";
 import { useContext } from "react";
 import { AuthContext } from "../auth/context";
 import { User } from "../utils/interfaces";
+import { StatusContext } from "../context/StatusContext";
 
 export default function useAuth() {
   const { currentUser, setCurrentUser } = useContext(AuthContext);
+  const { currentChat } = useContext(StatusContext);
 
   const registerUser = async (
     email: string,
@@ -80,11 +82,11 @@ export default function useAuth() {
     }
   };
 
-  const getFriends = async (setFriends: any) => {
+  const getFriends = async (setFriends: any, user: any) => {
     try {
       const uidArr: Array<string> = [];
       const docSnap = await getDocs(
-        collection(db, "users", currentUser.uid, "friends")
+        collection(db, "users", user.uid, "friends")
       );
       docSnap.docs.map((d) => {
         uidArr.push(d.data().uid);

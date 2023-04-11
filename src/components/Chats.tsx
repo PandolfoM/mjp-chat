@@ -36,26 +36,9 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function Chats(props: Props) {
-  const [friends, setFriends] = useState<Array<User>>([]);
-  const { currentUser } = useContext(AuthContext);
+  const { friends } = useContext(AuthContext);
   const { classes } = useStyles();
   const { getFriends } = useAuth();
-
-  useEffect(() => {
-    const unsub = async () => {
-      await getFriends(setFriends);
-    };
-
-    if (currentUser) {
-      return () => {
-        unsub();
-      };
-    }
-  }, []);
-
-  // useEffect(() => {
-  //   console.log(props.userDoc);
-  // }, [friends]);
 
   return (
     <div className={classes.container}>
