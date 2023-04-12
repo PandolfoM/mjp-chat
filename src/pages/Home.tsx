@@ -74,10 +74,12 @@ function Home() {
     <div className={classes.home_page}>
       <LoadingOverlay visible={loading} overlayOpacity={1} />
       <Chats userDoc={userDoc} /> {/* Sidebar with all current chats */}
-      <div className={classes.content}>
-        <ChatMessages chatData={messages} userDoc={userDoc} />
-        <ChatBox />
-      </div>
+      {currentChat && (
+        <div className={classes.content}>
+          <ChatMessages chatData={messages} userDoc={userDoc} />
+          <ChatBox />
+        </div>
+      )}
     </div>
   );
 }
