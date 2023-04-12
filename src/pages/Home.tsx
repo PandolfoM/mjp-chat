@@ -4,7 +4,15 @@ import Chats from "../components/Chats";
 import ChatMessages from "../components/ChatMessages";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../auth/context";
-import { DocumentData, collection, doc, onSnapshot } from "firebase/firestore";
+import {
+  DocumentData,
+  collection,
+  doc,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import { db } from "../firebase";
 import { StatusContext } from "../context/StatusContext";
 
@@ -49,7 +57,9 @@ function Home() {
 
   useEffect(() => {
     const unsub = async () => {
-      onSnapshot(collection(db, "chats", currentChat, "messages"), (doc) => {
+      const msgsRef = collection(db, "chats", currentChat, "messages");
+      const q = query(msgsRef, orderBy("sentAt"), limit(20));
+      onSnapshot(q, (doc) => {
         setMessages([]);
         doc.forEach((e) => {
           setMessages((current) => [...current, e.data()]);

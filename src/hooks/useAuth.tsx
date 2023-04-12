@@ -5,7 +5,6 @@ import {
 } from "firebase/auth";
 import { auth, db } from "../firebase";
 import {
-  DocumentData,
   collection,
   doc,
   getDocs,
@@ -18,11 +17,9 @@ import { randomPfpColor } from "../utils/helpers";
 import { useContext } from "react";
 import { AuthContext } from "../auth/context";
 import { User } from "../utils/interfaces";
-import { StatusContext } from "../context/StatusContext";
 
 export default function useAuth() {
-  const { currentUser, setCurrentUser } = useContext(AuthContext);
-  const { currentChat } = useContext(StatusContext);
+  const { setCurrentUser } = useContext(AuthContext);
 
   const registerUser = async (
     email: string,
