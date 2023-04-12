@@ -1,10 +1,15 @@
 import { Avatar, Text, createStyles } from "@mantine/core";
-import { User } from "../utils/interfaces";
+import { Chat, User } from "../utils/interfaces";
 import StatusIndicator from "./StatusIndicator";
-import { DocumentData, doc, onSnapshot } from "firebase/firestore";
+import { DocumentData, doc, getDoc, onSnapshot } from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
 import { StatusContext } from "../context/StatusContext";
 import { db } from "../firebase";
+import { AuthContext } from "../auth/context";
+
+type Props = {
+  chat: Chat;
+};
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -20,46 +25,51 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-type Props = {
-  user: User;
-  userDoc: DocumentData | undefined;
-};
-
 function UserChat(props: Props) {
   const [lastMessage, setLastMessage] = useState<string>("");
+  const [user, setUser] = useState<User>();
   const { classes } = useStyles();
   const { setCurrentPage } = useContext(StatusContext);
+  const { currentUser } = useContext(AuthContext);
 
   useEffect(() => {
-    if (props.user.chats) {
-      for (let i = 0; i < props.user.chats?.length; i++) {
-        onSnapshot(doc(db, "chats", props.user.chats[i]), (doc) => {
-          setLastMessage(doc.data()?.lastMessage);
-        });
+    const getOtherUser = (): string => {
+      const filter = props.chat.users.filter(
+        (user) => user !== currentUser.uid
+      );
+      return filter[0];
+    };
+
+    const unsub = async () => {
+      const ref = doc(db, "users", getOtherUser());
+      const docSnap = await getDoc(ref);
+      if (docSnap.exists()) {
+        setUser(docSnap.data() as User);
       }
-    }
+    };
+
+    unsub();
   }, []);
 
-  const getChat = () => {
-    const chatId = props.user.chats?.filter((el) =>
-      props.userDoc?.chats.includes(el)
-    );
-    chatId ? setCurrentPage(chatId[0]) : setCurrentPage("");
-  };
-
   return (
-    <div className={classes.container} onClick={() => getChat()}>
-      <StatusIndicator user={props.user} size={18} offset={7}>
-        <Avatar size={48} radius="xl" color={props.user.color} />
-      </StatusIndicator>
-      <div>
-        <Text fw="bold" truncate>
-          {props.user.username}
-        </Text>
-        <Text color="dimmed" fz={"sm"}>
-          {lastMessage}
-        </Text>
-      </div>
+    <div
+      className={classes.container}
+      onClick={() => setCurrentPage(props.chat.id)}>
+      {user && (
+        <>
+          <StatusIndicator user={user} size={18} offset={7}>
+            <Avatar size={48} radius="xl" color={user?.color} />
+          </StatusIndicator>
+          <div>
+            <Text fw="bold" truncate>
+              {user.username}
+            </Text>
+            <Text color="dimmed" fz={"sm"}>
+              {props.chat.lastMessage}
+            </Text>
+          </div>
+        </>
+      )}
     </div>
   );
 }

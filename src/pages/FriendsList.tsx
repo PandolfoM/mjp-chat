@@ -26,7 +26,7 @@ function FriendsList() {
       <Title order={3}>Friends</Title>
       <Divider my="sm" />
       {friends?.map((i: User) => (
-        <>
+        <div key={i.uid}>
           <div className={classes.container}>
             <StatusIndicator user={i} size={18} offset={7}>
               <Avatar size={48} radius="xl" color={i.color} />
@@ -38,7 +38,7 @@ function FriendsList() {
             </div>
           </div>
           <Divider my="sm" />
-        </>
+        </div>
       ))}
     </>
   );

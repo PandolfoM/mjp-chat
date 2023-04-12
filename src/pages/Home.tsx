@@ -96,7 +96,7 @@ function Home() {
   return (
     <div className={classes.home_page}>
       <LoadingOverlay visible={loading} overlayOpacity={1} />
-      <div className={classes.sidebar}>
+      <nav className={classes.sidebar}>
         <FriendsButton />
         <Divider my="sm" />
         <div className={classes.allChats}>
@@ -105,10 +105,12 @@ function Home() {
         <div className={classes.currentUser}>
           <CurrentUser userDoc={userDoc} />
         </div>
-      </div>
+      </nav>
+
       {currentPage && (
         <div className={classes.content}>
           {currentPage === "friends" && <FriendsList />}
+
           <ChatMessages chatData={messages} userDoc={userDoc} />
           <ChatBox />
         </div>

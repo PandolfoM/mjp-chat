@@ -6,3 +6,9 @@ export interface User {
   username: string;
   chats?: Array<string>;
 }
+
+export interface Chat {
+  id: string,
+  lastMessage: string,
+  users: Array<string>
+}
