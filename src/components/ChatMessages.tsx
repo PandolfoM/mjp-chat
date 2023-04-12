@@ -1,8 +1,7 @@
 import { Avatar, Text, createStyles } from "@mantine/core";
-import { DocumentData, Timestamp } from "firebase/firestore";
-import { useContext } from "react";
+import { DocumentData } from "firebase/firestore";
+import { useContext, useEffect, useRef } from "react";
 import { AuthContext } from "../auth/context";
-import { StatusContext } from "../context/StatusContext";
 import { formatTime } from "../utils/helpers";
 
 interface ChatData {
@@ -37,7 +36,12 @@ const useStyles = createStyles((theme) => ({
 
 function ChatMessages(props: Props) {
   const { classes } = useStyles();
+  const ref = useRef<HTMLDivElement>(null);
   const { friends, currentUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    ref.current?.scrollIntoView({ behavior: "smooth" });
+  }, [props.chatData]);
 
   const getUser = (uid: string): string => {
     if (uid === currentUser.uid) return props.userDoc?.username;
@@ -62,7 +66,7 @@ function ChatMessages(props: Props) {
   return (
     <div className={classes.container}>
       {props.chatData?.map((i: ChatData) => (
-        <div className={classes.message} key={i.sentAt}>
+        <div ref={ref} className={classes.message} key={i.sentAt}>
           <Avatar size={48} radius="xl" color={getColor(i.sentBy)} />
           <div>
             <div className={classes.messageName}>
