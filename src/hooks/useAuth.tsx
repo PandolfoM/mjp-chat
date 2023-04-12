@@ -82,11 +82,15 @@ export default function useAuth() {
   const getFriends = async (setFriends: any, user: any) => {
     try {
       const uidArr: Array<string> = [];
-      const docSnap = await getDocs(
-        collection(db, "users", user.uid, "friends")
+      const qUser = query(
+        collection(db, "users"),
+        where("uid", "==", user.uid)
       );
-      docSnap.docs.map((d) => {
-        uidArr.push(d.data().uid);
+      const docSnap = await getDocs(qUser);
+      docSnap.forEach((doc) => {
+        for (let i = 0; i < doc.data().friends.length; i++) {
+          uidArr.push(doc.data().friends[i]);
+        }
       });
 
       const q = query(collection(db, "users"), where("uid", "in", uidArr));
