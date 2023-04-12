@@ -1,7 +1,7 @@
 import { Avatar, Text, createStyles } from "@mantine/core";
 import { Chat, User } from "../utils/interfaces";
 import StatusIndicator from "./StatusIndicator";
-import { DocumentData, doc, getDoc, onSnapshot } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
 import { StatusContext } from "../context/StatusContext";
 import { db } from "../firebase";
@@ -23,10 +23,13 @@ const useStyles = createStyles((theme) => ({
       backgroundColor: theme.colors.dark[6],
     },
   },
+
+  content: {
+    overflow: "hidden",
+  },
 }));
 
 function UserChat(props: Props) {
-  const [lastMessage, setLastMessage] = useState<string>("");
   const [user, setUser] = useState<User>();
   const { classes } = useStyles();
   const { setCurrentPage } = useContext(StatusContext);
@@ -60,11 +63,11 @@ function UserChat(props: Props) {
           <StatusIndicator user={user} size={18} offset={7}>
             <Avatar size={48} radius="xl" color={user?.color} />
           </StatusIndicator>
-          <div>
+          <div className={classes.content}>
             <Text fw="bold" truncate>
               {user.username}
             </Text>
-            <Text color="dimmed" fz={"sm"}>
+            <Text color="dimmed" fz={"sm"} truncate>
               {props.chat.lastMessage}
             </Text>
           </div>
