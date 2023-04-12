@@ -28,7 +28,7 @@ type Props = {
 function UserChat(props: Props) {
   const [lastMessage, setLastMessage] = useState<string>("");
   const { classes } = useStyles();
-  const { setCurrentChat } = useContext(StatusContext);
+  const { setCurrentPage } = useContext(StatusContext);
 
   useEffect(() => {
     if (props.user.chats) {
@@ -44,7 +44,7 @@ function UserChat(props: Props) {
     const chatId = props.user.chats?.filter((el) =>
       props.userDoc?.chats.includes(el)
     );
-    chatId ? setCurrentChat(chatId[0]) : setCurrentChat("");
+    chatId ? setCurrentPage(chatId[0]) : setCurrentPage("");
   };
 
   return (

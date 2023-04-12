@@ -25,7 +25,8 @@ const useStyles = createStyles((theme) => ({
     minHeight: 50,
     display: "flex",
     gap: theme.spacing.xs,
-    padding: theme.spacing.sm,
+    paddingTop: theme.spacing.sm,
+    paddingBottom: theme.spacing.sm,
   },
   messageName: {
     gap: theme.spacing.xs,
