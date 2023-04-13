@@ -40,7 +40,7 @@ export default function useAuth() {
           status: "online",
           uid: createUser.user.uid,
         });
-        await setDoc(doc(db, "usernames", username), {
+        await setDoc(doc(db, "emails", email), {
           uid: createUser.user.uid,
         });
         await updateProfile(createUser.user, {

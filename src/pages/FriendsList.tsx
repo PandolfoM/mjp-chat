@@ -1,8 +1,17 @@
-import { Avatar, Divider, Text, Title, createStyles } from "@mantine/core";
+import {
+  Avatar,
+  Button,
+  Divider,
+  Text,
+  Title,
+  createStyles,
+} from "@mantine/core";
 import { useContext } from "react";
 import { AuthContext } from "../auth/context";
 import { User } from "../utils/interfaces";
 import StatusIndicator from "../components/StatusIndicator";
+import AddFriendModal from "../components/AddFriendModal";
+import { useDisclosure } from "@mantine/hooks";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -16,14 +25,47 @@ const useStyles = createStyles((theme) => ({
       backgroundColor: theme.colors.dark[6],
     },
   },
+
+  nav: {
+    display: "flex",
+    gap: theme.spacing.xl,
+    alignItems: "center",
+  },
+  navItems: {
+    display: "flex",
+    gap: theme.spacing.sm,
+  },
+  textColor: {
+    color: theme.colors.dark[0],
+  },
 }));
 
 function FriendsList() {
   const { classes } = useStyles();
   const { friends } = useContext(AuthContext);
+  const [opened, { open, close }] = useDisclosure(false);
+
   return (
     <>
-      <Title order={3}>Friends</Title>
+      <AddFriendModal opened={opened} close={close} />
+      <nav className={classes.nav}>
+        <div className={classes.navItems}>
+          <Title order={3}>Friends</Title>
+        </div>
+        <div className={classes.navItems}>
+          <Button variant="subtle" className={classes.textColor}>
+            Online
+          </Button>
+          <Button variant="subtle" className={classes.textColor}>
+            All
+          </Button>
+        </div>
+        <div className={classes.navItems}>
+          <Button compact size="xs" onClick={open}>
+            Add Friend
+          </Button>
+        </div>
+      </nav>
       <Divider my="sm" />
       {friends?.map((i: User) => (
         <div key={i.uid}>
