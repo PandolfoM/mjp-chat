@@ -1,10 +1,11 @@
 import { Button, Modal, TextInput, createStyles } from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { db } from "../firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { User } from "../utils/interfaces";
 import UserButton from "./UserButton";
+import { AuthContext } from "../auth/context";
 
 type Props = {
   opened: boolean;
@@ -21,31 +22,32 @@ const useStyles = createStyles((theme) => ({
   },
 
   user: {
+    userSelect: "none",
+    padding: theme.spacing.xs,
     display: "flex",
     alignItems: "center",
     gap: theme.spacing.xs,
-    padding: theme.spacing.xs,
-    userSelect: "none",
   },
 }));
 
 function AddFriendModal(props: Props) {
   const { classes } = useStyles();
+  const { currentUser, friends } = useContext(AuthContext);
   const [searchedEmail, setSearchedEmail] = useState<string>("");
   const [debounced] = useDebouncedValue(searchedEmail, 200);
   const [foundUser, setFoundUser] = useState<User>();
 
   useEffect(() => {
     const unsub = async () => {
-      const ref = doc(db, "emails", debounced);
-      const docSnap = await getDoc(ref);
-      if (docSnap.exists()) {
-        const userRef = doc(db, "users", docSnap.data().uid);
-        const userSnap = await getDoc(userRef);
-        if (userSnap.exists()) {
-          console.log(userSnap.data());
-
-          setFoundUser(userSnap.data() as User);
+      if (debounced) {
+        const ref = doc(db, "emails", debounced);
+        const docSnap = await getDoc(ref);
+        if (docSnap.exists()) {
+          const userRef = doc(db, "users", docSnap.data().uid);
+          const userSnap = await getDoc(userRef);
+          if (userSnap.exists()) {
+            setFoundUser(userSnap.data() as User);
+          }
         }
       }
     };
@@ -72,17 +74,33 @@ function AddFriendModal(props: Props) {
           placeholder="Enter an email"
           w="100%"
           rightSection={
-            <Button compact disabled={foundUser ? false : true} type="submit">
-              Send Request
+            <Button
+              compact
+              mr="5px"
+              disabled={
+                !foundUser
+                  ? true
+                  : foundUser?.uid === currentUser.uid
+                  ? true
+                  : friends.find((i) => i.uid === foundUser?.uid)
+                  ? true
+                  : false
+              }
+              type="submit">
+              {foundUser?.uid === currentUser.uid
+                ? "Cannot add yourself"
+                : friends.find((i) => i.uid === foundUser?.uid)
+                ? "Already friends"
+                : "Send Request"}
             </Button>
           }
-          rightSectionWidth={"20%"}
+          rightSectionWidth={"auto"}
         />
       </form>
 
       {foundUser && (
         <div className={classes.user}>
-          <UserButton user={foundUser} />
+          <UserButton user={foundUser} lastMessage={foundUser.email} />
         </div>
       )}
     </Modal>
