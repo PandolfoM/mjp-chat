@@ -1,29 +1,38 @@
 import {
-  Avatar,
+  ActionIcon,
   Button,
   Divider,
-  Text,
   Title,
+  Tooltip,
   createStyles,
+  useMantineTheme,
 } from "@mantine/core";
 import { useContext } from "react";
 import { AuthContext } from "../auth/context";
 import { User } from "../utils/interfaces";
-import StatusIndicator from "../components/StatusIndicator";
 import AddFriendModal from "../components/AddFriendModal";
 import { useDisclosure } from "@mantine/hooks";
+import UserButton from "../components/UserButton";
+import { Trash } from "react-feather";
+import useAuth from "../hooks/useAuth";
 
 const useStyles = createStyles((theme) => ({
   container: {
     display: "flex",
     alignItems: "center",
-    gap: theme.spacing.xs,
+    justifyContent: "space-between",
     padding: theme.spacing.xs,
     cursor: "pointer",
     userSelect: "none",
     "&:hover": {
       backgroundColor: theme.colors.dark[6],
     },
+  },
+
+  btnContainer: {
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing.xs,
   },
 
   nav: {
@@ -43,7 +52,9 @@ const useStyles = createStyles((theme) => ({
 function FriendsList() {
   const { classes } = useStyles();
   const { friends } = useContext(AuthContext);
+  const theme = useMantineTheme();
   const [opened, { open, close }] = useDisclosure(false);
+  const { removeFriend } = useAuth();
 
   return (
     <>
@@ -71,18 +82,19 @@ function FriendsList() {
       </nav>
       <Divider my="sm" />
       {friends?.map((i: User) => (
-        <div key={i.uid}>
-          <div className={classes.container}>
-            <StatusIndicator user={i} size={18} offset={7}>
-              <Avatar size={48} radius="xl" color={i.color} />
-            </StatusIndicator>
-            <div>
-              <Text fw="bold" truncate>
-                {i.username}
-              </Text>
-            </div>
+        <div className={classes.container} key={i.uid}>
+          <div className={classes.btnContainer} key={i.uid}>
+            <UserButton user={i} />
           </div>
-          <Divider my="sm" />
+          <Tooltip label="Delete" color="gray" withArrow>
+            <ActionIcon
+              radius="xl"
+              variant="light"
+              size="xl"
+              onClick={() => removeFriend(i.uid)}>
+              <Trash size={theme.fontSizes.lg} color={theme.colors.dark[0]} />
+            </ActionIcon>
+          </Tooltip>
         </div>
       ))}
     </>

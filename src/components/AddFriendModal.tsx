@@ -70,9 +70,9 @@ function AddFriendModal(props: Props) {
           e.preventDefault();
           if (foundUser) {
             try {
-              await addFriend(foundUser.uid);
+              await addFriend(foundUser);
               try {
-                setFriends((current) => [...current, foundUser]);
+                
                 setFoundUser(null);
                 setSearchedEmail("");
                 props.close(true);

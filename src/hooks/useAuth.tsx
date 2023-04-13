@@ -5,6 +5,7 @@ import {
 } from "firebase/auth";
 import { auth, db } from "../firebase";
 import {
+  arrayRemove,
   arrayUnion,
   collection,
   doc,
@@ -21,7 +22,8 @@ import { AuthContext } from "../auth/context";
 import { User } from "../utils/interfaces";
 
 export default function useAuth() {
-  const { currentUser, setCurrentUser } = useContext(AuthContext);
+  const { currentUser, setCurrentUser, setFriends, friends } =
+    useContext(AuthContext);
 
   const registerUser = async (
     email: string,
@@ -110,12 +112,21 @@ export default function useAuth() {
     }
   };
 
-  const addFriend = async (friendUid: string) => {
+  const addFriend = async (friend: User) => {
     const currentUserRef = doc(db, "users", currentUser.uid);
     await updateDoc(currentUserRef, {
-      friends: arrayUnion(friendUid),
+      friends: arrayUnion(friend.uid),
     });
+    setFriends((current) => [...current, friend]);
   };
 
-  return { registerUser, loginUser, getFriends, addFriend };
+  const removeFriend = async (friendUid: string) => {
+    const currentUserRef = doc(db, "users", currentUser.uid);
+    await updateDoc(currentUserRef, {
+      friends: arrayRemove(friendUid),
+    });
+    setFriends((current) => current.filter((i) => i.uid !== friendUid));
+  };
+
+  return { registerUser, loginUser, getFriends, addFriend, removeFriend };
 }
