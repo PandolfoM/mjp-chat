@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import { StatusContext } from "../context/StatusContext";
 import { db } from "../firebase";
 import { AuthContext } from "../auth/context";
+import UserButton from "./UserButton";
 
 type Props = {
   chat: Chat;
@@ -59,19 +60,7 @@ function UserChat(props: Props) {
       className={classes.container}
       onClick={() => setCurrentPage(props.chat.id)}>
       {user && (
-        <>
-          <StatusIndicator user={user} size={18} offset={7}>
-            <Avatar size={48} radius="xl" color={user?.color} />
-          </StatusIndicator>
-          <div className={classes.content}>
-            <Text fw="bold" truncate>
-              {user.username}
-            </Text>
-            <Text color="dimmed" fz={"sm"} truncate>
-              {props.chat.lastMessage}
-            </Text>
-          </div>
-        </>
+        <UserButton user={user} lastMessage={props.chat.lastMessage}/>
       )}
     </div>
   );

@@ -59,6 +59,9 @@ function FriendsList() {
           <Button variant="subtle" className={classes.textColor}>
             All
           </Button>
+          <Button variant="subtle" className={classes.textColor}>
+            Pending
+          </Button>
         </div>
         <div className={classes.navItems}>
           <Button compact size="xs" onClick={open}>

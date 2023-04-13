@@ -3,6 +3,8 @@ import { useDebouncedValue } from "@mantine/hooks";
 import React, { useEffect, useState } from "react";
 import { db } from "../firebase";
 import { doc, getDoc } from "firebase/firestore";
+import { User } from "../utils/interfaces";
+import UserButton from "./UserButton";
 
 type Props = {
   opened: boolean;
@@ -17,20 +19,34 @@ const useStyles = createStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
   },
+
+  user: {
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing.xs,
+    padding: theme.spacing.xs,
+    userSelect: "none",
+  },
 }));
 
 function AddFriendModal(props: Props) {
   const { classes } = useStyles();
   const [searchedEmail, setSearchedEmail] = useState<string>("");
   const [debounced] = useDebouncedValue(searchedEmail, 200);
-  const [foundUser, setFoundUser] = useState<string>("");
+  const [foundUser, setFoundUser] = useState<User>();
 
   useEffect(() => {
     const unsub = async () => {
       const ref = doc(db, "emails", debounced);
       const docSnap = await getDoc(ref);
       if (docSnap.exists()) {
-        setFoundUser(docSnap.data().uid);
+        const userRef = doc(db, "users", docSnap.data().uid);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          console.log(userSnap.data());
+
+          setFoundUser(userSnap.data() as User);
+        }
       }
     };
 
@@ -57,6 +73,12 @@ function AddFriendModal(props: Props) {
         }
         rightSectionWidth={"20%"}
       />
+
+      {foundUser && (
+        <div className={classes.user}>
+          <UserButton user={foundUser} />
+        </div>
+      )}
     </Modal>
   );
 }
