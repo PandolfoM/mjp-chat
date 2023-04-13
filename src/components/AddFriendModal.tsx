@@ -61,18 +61,24 @@ function AddFriendModal(props: Props) {
       centered
       size="50%"
       classNames={{ body: classes.container }}>
-      <TextInput
-        value={searchedEmail}
-        onChange={(e) => setSearchedEmail(e.currentTarget.value)}
-        placeholder="Enter an email"
-        w="100%"
-        rightSection={
-          <Button compact disabled={foundUser ? false : true}>
-            Send Request
-          </Button>
-        }
-        rightSectionWidth={"20%"}
-      />
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          console.log("requested");
+        }}>
+        <TextInput
+          value={searchedEmail}
+          onChange={(e) => setSearchedEmail(e.currentTarget.value)}
+          placeholder="Enter an email"
+          w="100%"
+          rightSection={
+            <Button compact disabled={foundUser ? false : true} type="submit">
+              Send Request
+            </Button>
+          }
+          rightSectionWidth={"20%"}
+        />
+      </form>
 
       {foundUser && (
         <div className={classes.user}>
