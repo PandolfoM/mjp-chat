@@ -5,12 +5,14 @@ import {
 } from "firebase/auth";
 import { auth, db } from "../firebase";
 import {
+  arrayUnion,
   collection,
   doc,
   getDocs,
   onSnapshot,
   query,
   setDoc,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { randomPfpColor } from "../utils/helpers";
@@ -19,7 +21,7 @@ import { AuthContext } from "../auth/context";
 import { User } from "../utils/interfaces";
 
 export default function useAuth() {
-  const { setCurrentUser } = useContext(AuthContext);
+  const { currentUser, setCurrentUser } = useContext(AuthContext);
 
   const registerUser = async (
     email: string,
@@ -108,5 +110,12 @@ export default function useAuth() {
     }
   };
 
-  return { registerUser, loginUser, getFriends };
+  const addFriend = async (friendUid: string) => {
+    const currentUserRef = doc(db, "users", currentUser.uid);
+    await updateDoc(currentUserRef, {
+      friends: arrayUnion(friendUid),
+    });
+  };
+
+  return { registerUser, loginUser, getFriends, addFriend };
 }

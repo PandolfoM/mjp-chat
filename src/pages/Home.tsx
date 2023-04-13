@@ -61,21 +61,11 @@ function Home() {
   const { classes } = useStyles();
 
   useEffect(() => {
-    const unsub = async () => {
-      if (currentUser) {
-        const unsub = onSnapshot(doc(db, "users", currentUser?.uid), (doc) => {
-          setUserDoc(doc.data());
-        });
-
-        return () => {
-          unsub();
-        };
-      }
-    };
-
-    return () => {
-      unsub();
-    };
+    if (currentUser) {
+      onSnapshot(doc(db, "users", currentUser?.uid), (doc) => {
+        setUserDoc(doc.data());
+      });
+    }
   }, []);
 
   useEffect(() => {

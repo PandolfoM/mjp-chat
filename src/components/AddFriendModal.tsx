@@ -6,6 +6,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { User } from "../utils/interfaces";
 import UserButton from "./UserButton";
 import { AuthContext } from "../auth/context";
+import useAuth from "../hooks/useAuth";
 
 type Props = {
   opened: boolean;
@@ -32,10 +33,11 @@ const useStyles = createStyles((theme) => ({
 
 function AddFriendModal(props: Props) {
   const { classes } = useStyles();
-  const { currentUser, friends } = useContext(AuthContext);
+  const { addFriend } = useAuth();
+  const { currentUser, friends, setFriends } = useContext(AuthContext);
   const [searchedEmail, setSearchedEmail] = useState<string>("");
   const [debounced] = useDebouncedValue(searchedEmail, 200);
-  const [foundUser, setFoundUser] = useState<User>();
+  const [foundUser, setFoundUser] = useState<User | null>(null);
 
   useEffect(() => {
     const unsub = async () => {
@@ -64,9 +66,23 @@ function AddFriendModal(props: Props) {
       size="50%"
       classNames={{ body: classes.container }}>
       <form
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault();
-          console.log("requested");
+          if (foundUser) {
+            try {
+              await addFriend(foundUser.uid);
+              try {
+                setFriends((current) => [...current, foundUser]);
+                setFoundUser(null);
+                setSearchedEmail("");
+                props.close(true);
+              } catch (error) {
+                console.log(error);
+              }
+            } catch (error) {
+              console.log(error);
+            }
+          }
         }}>
         <TextInput
           value={searchedEmail}
