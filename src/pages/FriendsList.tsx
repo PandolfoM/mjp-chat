@@ -9,6 +9,7 @@ import { useState } from "react";
 import AddFriendModal from "../components/AddFriendModal";
 import { useDisclosure } from "@mantine/hooks";
 import OnlineFriends from "./OnlineFriends";
+import PendingFriends from "./PendingFriends";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -81,7 +82,14 @@ function FriendsList() {
             onClick={() => setCurrentList("all")}>
             All
           </Button>
-          <Button variant="subtle" className={classes.textColor}>
+          <Button
+            variant="subtle"
+            className={classes.textColor}
+            sx={{
+              backgroundColor:
+                currentList === "pending" ? theme.colors.dark[5] : "inherit",
+            }}
+            onClick={() => setCurrentList("pending")}>
             Pending
           </Button>
         </div>
@@ -96,24 +104,9 @@ function FriendsList() {
         {
           online: <OnlineFriends status="offline" />,
           all: <OnlineFriends status="all" />,
+          pending: <PendingFriends />,
         }[currentList]
       }
-      {/* {friends?.map((i: User) => (
-        <div className={classes.container} key={i.uid}>
-          <div className={classes.btnContainer} key={i.uid}>
-            <UserButton user={i} />
-          </div>
-          <Tooltip label="Delete" color="gray" withArrow>
-            <ActionIcon
-              radius="xl"
-              variant="light"
-              size="xl"
-              onClick={() => removeFriend(i.uid)}>
-              <Trash size={theme.fontSizes.lg} color={theme.colors.dark[0]} />
-            </ActionIcon>
-          </Tooltip>
-        </div>
-      ))} */}
     </>
   );
 }

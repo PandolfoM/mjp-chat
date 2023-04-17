@@ -5,10 +5,13 @@ import {
 } from "firebase/auth";
 import { auth, db } from "../firebase";
 import {
+  addDoc,
   arrayRemove,
   arrayUnion,
   collection,
+  deleteDoc,
   doc,
+  getDoc,
   getDocs,
   onSnapshot,
   orderBy,
@@ -85,50 +88,87 @@ export default function useAuth() {
   };
 
   const getFriends = async (setFriends: any, user: any) => {
-    try {
+    const qUser = query(
+      collection(db, "users"),
+      where("uid", "==", user.uid),
+      orderBy("username")
+    );
+
+    onSnapshot(qUser, (querySnapshot) => {
       const uidArr: Array<string> = [];
-      const qUser = query(
-        collection(db, "users"),
-        where("uid", "==", user.uid),
-        orderBy("username")
-      );
-      const docSnap = await getDocs(qUser);
-      docSnap.forEach((doc) => {
+
+      querySnapshot.forEach((doc) => {
         for (let i = 0; i < doc.data().friends.length; i++) {
           uidArr.push(doc.data().friends[i]);
         }
       });
 
-      const q = query(collection(db, "users"), where("uid", "in", uidArr));
+      if (uidArr.length > 0) {
+        const q = query(collection(db, "users"), where("uid", "in", uidArr));
 
-      onSnapshot(q, (querySnapshot) => {
-        const userFriends: Array<User> = [];
-        querySnapshot.forEach((e) => {
-          userFriends.push(e.data() as User);
+        onSnapshot(q, (querySnapshot) => {
+          const userFriends: Array<User> = [];
+          querySnapshot.forEach((e) => {
+            userFriends.push(e.data() as User);
+          });
+          setFriends(userFriends);
         });
-        setFriends(userFriends);
-      });
-    } catch (e) {
-      console.log(e);
-      return ["error"];
-    }
+      } else {
+        setFriends([]);
+      }
+    });
   };
 
-  const addFriend = async (friend: User) => {
-    const currentUserRef = doc(db, "users", currentUser.uid);
-    await updateDoc(currentUserRef, {
-      friends: arrayUnion(friend.uid),
+  const addFriend = async (friendUid: string) => {
+    const docId = `${friendUid}${currentUser.uid}`;
+    await setDoc(doc(db, "requests", docId), {
+      to: friendUid,
+      from: currentUser.uid,
+      id: docId,
     });
-    setFriends((current) => [...current, friend]);
   };
 
   const removeFriend = async (friendUid: string) => {
     const currentUserRef = doc(db, "users", currentUser.uid);
+    const friendUserRef = doc(db, "users", friendUid);
     await updateDoc(currentUserRef, {
       friends: arrayRemove(friendUid),
+    });
+
+    await updateDoc(friendUserRef, {
+      friends: arrayRemove(currentUser.uid),
     });
     setFriends((current) => current.filter((i) => i.uid !== friendUid));
   };
 
-  return { registerUser, loginUser, getFriends, addFriend, removeFriend };
+  const removeFriendRequest = async (id: string) => {
+    const ref = doc(db, "requests", id);
+    await deleteDoc(ref);
+  };
+
+  const acceptFriend = async (id: string, fromId: string) => {
+    const currentUserRef = doc(db, "users", currentUser.uid);
+    const friendUserRef = doc(db, "users", fromId);
+
+    await updateDoc(currentUserRef, {
+      friends: arrayUnion(fromId),
+    });
+
+    await updateDoc(friendUserRef, {
+      friends: arrayUnion(currentUser.uid),
+    });
+    // setFriends((current) => [...current, friend]);
+    const ref = doc(db, "requests", id);
+    await deleteDoc(ref);
+  };
+
+  return {
+    registerUser,
+    loginUser,
+    getFriends,
+    addFriend,
+    removeFriend,
+    removeFriendRequest,
+    acceptFriend,
+  };
 }

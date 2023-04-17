@@ -57,7 +57,7 @@ function OnlineFriends(props: Props) {
     <>
       {onlineFriends?.map((i: User) => (
         <div className={classes.container} key={i.uid}>
-          <div className={classes.btnContainer} key={i.uid}>
+          <div className={classes.btnContainer}>
             <UserButton user={i} />
           </div>
           <Tooltip label="Delete" color="gray" withArrow>

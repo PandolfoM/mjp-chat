@@ -55,8 +55,6 @@ function UserChat(props: Props) {
     unsub();
   }, []);
 
-  console.log(props.chat.id);
-
   return (
     <Box
       className={classes.container}

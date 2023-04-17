@@ -70,7 +70,7 @@ function AddFriendModal(props: Props) {
           e.preventDefault();
           if (foundUser) {
             try {
-              await addFriend(foundUser);
+              await addFriend(foundUser.uid);
               try {
                 
                 setFoundUser(null);
