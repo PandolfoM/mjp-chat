@@ -1,20 +1,14 @@
 import {
-  ActionIcon,
   Button,
   Divider,
   Title,
-  Tooltip,
   createStyles,
   useMantineTheme,
 } from "@mantine/core";
-import { useContext } from "react";
-import { AuthContext } from "../auth/context";
-import { User } from "../utils/interfaces";
+import { useState } from "react";
 import AddFriendModal from "../components/AddFriendModal";
 import { useDisclosure } from "@mantine/hooks";
-import UserButton from "../components/UserButton";
-import { Trash } from "react-feather";
-import useAuth from "../hooks/useAuth";
+import OnlineFriends from "./OnlineFriends";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -46,15 +40,18 @@ const useStyles = createStyles((theme) => ({
   },
   textColor: {
     color: theme.colors.dark[0],
+    padding: theme.spacing.xs,
+    "&:hover": {
+      backgroundColor: theme.colors.dark[6],
+    },
   },
 }));
 
 function FriendsList() {
-  const { classes } = useStyles();
-  const { friends } = useContext(AuthContext);
-  const theme = useMantineTheme();
+  const [currentList, setCurrentList] = useState<string>("online");
   const [opened, { open, close }] = useDisclosure(false);
-  const { removeFriend } = useAuth();
+  const theme = useMantineTheme();
+  const { classes } = useStyles();
 
   return (
     <>
@@ -64,10 +61,24 @@ function FriendsList() {
           <Title order={3}>Friends</Title>
         </div>
         <div className={classes.navItems}>
-          <Button variant="subtle" className={classes.textColor}>
+          <Button
+            variant="subtle"
+            className={classes.textColor}
+            sx={{
+              backgroundColor:
+                currentList === "online" ? theme.colors.dark[5] : "inherit",
+            }}
+            onClick={() => setCurrentList("online")}>
             Online
           </Button>
-          <Button variant="subtle" className={classes.textColor}>
+          <Button
+            variant="subtle"
+            className={classes.textColor}
+            sx={{
+              backgroundColor:
+                currentList === "all" ? theme.colors.dark[5] : "inherit",
+            }}
+            onClick={() => setCurrentList("all")}>
             All
           </Button>
           <Button variant="subtle" className={classes.textColor}>
@@ -81,7 +92,13 @@ function FriendsList() {
         </div>
       </nav>
       <Divider my="sm" />
-      {friends?.map((i: User) => (
+      {
+        {
+          online: <OnlineFriends status="offline" />,
+          all: <OnlineFriends status="all" />,
+        }[currentList]
+      }
+      {/* {friends?.map((i: User) => (
         <div className={classes.container} key={i.uid}>
           <div className={classes.btnContainer} key={i.uid}>
             <UserButton user={i} />
@@ -96,7 +113,7 @@ function FriendsList() {
             </ActionIcon>
           </Tooltip>
         </div>
-      ))}
+      ))} */}
     </>
   );
 }

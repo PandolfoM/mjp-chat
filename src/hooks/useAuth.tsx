@@ -11,6 +11,7 @@ import {
   doc,
   getDocs,
   onSnapshot,
+  orderBy,
   query,
   setDoc,
   updateDoc,
@@ -88,7 +89,8 @@ export default function useAuth() {
       const uidArr: Array<string> = [];
       const qUser = query(
         collection(db, "users"),
-        where("uid", "==", user.uid)
+        where("uid", "==", user.uid),
+        orderBy("username")
       );
       const docSnap = await getDocs(qUser);
       docSnap.forEach((doc) => {
