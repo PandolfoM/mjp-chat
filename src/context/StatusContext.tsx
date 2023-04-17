@@ -1,4 +1,4 @@
-import { useIdle } from "@mantine/hooks";
+import { useIdle, useLocalStorage } from "@mantine/hooks";
 import { Dispatch, SetStateAction, createContext, useState } from "react";
 import useStatus from "../hooks/useStatus";
 import { useBeforeUnload } from "react-router-dom";
@@ -19,9 +19,14 @@ export const StatusContext = createContext<StatusContext>({
 
 export const StatusContextProvider = (props: React.PropsWithChildren<{}>) => {
   const { updateStatus } = useStatus();
-  const [status, setStatus] = useState<string>("online");
+  const [status, setStatus] = useLocalStorage({
+    key: "user-status",
+    defaultValue: "online",
+  });
   const [currentPage, setCurrentPage] = useState<string>("");
-  const idle = useIdle(600000);
+  const idle = useIdle(600000, {
+    initialState: status === "online" ? false : true,
+  });
   updateStatus(idle ? "idle" : "online");
   useBeforeUnload(() => updateStatus("offline"));
 

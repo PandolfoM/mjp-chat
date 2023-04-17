@@ -18,6 +18,7 @@ import { StatusContext } from "../context/StatusContext";
 import FriendsList from "../pages/FriendsList";
 import CurrentUser from "../components/CurrentUser";
 import FriendsButton from "../components/FriendsButton";
+import { User } from "../utils/interfaces";
 
 const useStyles = createStyles((theme) => ({
   home_page: {
@@ -54,7 +55,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function Home() {
-  const [userDoc, setUserDoc] = useState<DocumentData | undefined>(undefined);
+  const [userDoc, setUserDoc] = useState<User>();
   const [messages, setMessages] = useState<DocumentData[]>([]);
   const { currentUser, loading } = useContext(AuthContext);
   const { currentPage } = useContext(StatusContext);
@@ -63,7 +64,7 @@ function Home() {
   useEffect(() => {
     if (currentUser) {
       onSnapshot(doc(db, "users", currentUser?.uid), (doc) => {
-        setUserDoc(doc.data());
+        setUserDoc(doc.data() as User);
       });
     }
   }, []);
@@ -92,9 +93,11 @@ function Home() {
         <div className={classes.allChats}>
           <Chats userDoc={userDoc} />
         </div>
-        <div className={classes.currentUser}>
-          <CurrentUser userDoc={userDoc} />
-        </div>
+        {userDoc && (
+          <div className={classes.currentUser}>
+            <CurrentUser userDoc={userDoc} />
+          </div>
+        )}
       </nav>
 
       {currentPage && (

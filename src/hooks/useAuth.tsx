@@ -157,7 +157,6 @@ export default function useAuth() {
     await updateDoc(friendUserRef, {
       friends: arrayUnion(currentUser.uid),
     });
-    // setFriends((current) => [...current, friend]);
     const ref = doc(db, "requests", id);
     await deleteDoc(ref);
   };
