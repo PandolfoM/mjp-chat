@@ -1,6 +1,5 @@
-import { Avatar, Text, createStyles } from "@mantine/core";
+import { Box, createStyles, useMantineTheme } from "@mantine/core";
 import { Chat, User } from "../utils/interfaces";
-import StatusIndicator from "./StatusIndicator";
 import { doc, getDoc } from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
 import { StatusContext } from "../context/StatusContext";
@@ -33,8 +32,9 @@ const useStyles = createStyles((theme) => ({
 function UserChat(props: Props) {
   const [user, setUser] = useState<User>();
   const { classes } = useStyles();
-  const { setCurrentPage } = useContext(StatusContext);
+  const { setCurrentPage, currentPage } = useContext(StatusContext);
   const { currentUser } = useContext(AuthContext);
+  const theme = useMantineTheme();
 
   useEffect(() => {
     const getOtherUser = (): string => {
@@ -55,14 +55,18 @@ function UserChat(props: Props) {
     unsub();
   }, []);
 
+  console.log(props.chat.id);
+
   return (
-    <div
+    <Box
       className={classes.container}
+      sx={{
+        backgroundColor:
+          currentPage === props.chat.id ? theme.colors.dark[5] : "inherit",
+      }}
       onClick={() => setCurrentPage(props.chat.id)}>
-      {user && (
-        <UserButton user={user} lastMessage={props.chat.lastMessage}/>
-      )}
-    </div>
+      {user && <UserButton user={user} lastMessage={props.chat.lastMessage} />}
+    </Box>
   );
 }
 
