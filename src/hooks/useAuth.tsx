@@ -24,10 +24,11 @@ import { randomPfpColor } from "../utils/helpers";
 import { useContext } from "react";
 import { AuthContext } from "../auth/context";
 import { User } from "../utils/interfaces";
+import { StatusContext } from "../context/StatusContext";
 
 export default function useAuth() {
-  const { currentUser, setCurrentUser, setFriends, friends } =
-    useContext(AuthContext);
+  const { currentUser, setCurrentUser, setFriends } = useContext(AuthContext);
+  const { setCurrentPage } = useContext(StatusContext);
 
   const registerUser = async (
     email: string,
@@ -157,8 +158,20 @@ export default function useAuth() {
     await updateDoc(friendUserRef, {
       friends: arrayUnion(currentUser.uid),
     });
+
+    const createChat = await addDoc(collection(db, "chats"), {
+      lastMessage: "",
+      users: [currentUser.uid, fromId],
+    });
+
+    await updateDoc(doc(db, "chats", createChat.id), {
+      id: createChat.id,
+    });
+
     const ref = doc(db, "requests", id);
     await deleteDoc(ref);
+
+    setCurrentPage(createChat.id);
   };
 
   return {
