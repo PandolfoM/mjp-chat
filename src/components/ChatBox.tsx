@@ -1,15 +1,8 @@
-import { Textarea, createStyles } from "@mantine/core";
+import { Textarea } from "@mantine/core";
 import { useState } from "react";
 import useMessages from "../hooks/useMessages";
 
-const useStyles = createStyles((theme) => ({
-  container: {
-    padding: theme.spacing.md,
-  },
-}));
-
 function ChatBox() {
-  const { classes } = useStyles();
   const { addMessage } = useMessages();
   const [text, setText] = useState<string>("");
 
@@ -24,7 +17,7 @@ function ChatBox() {
   };
 
   return (
-    <form className={classes.container}>
+    <form>
       <Textarea
         value={text}
         onChange={(e) => setText(e.currentTarget.value)}

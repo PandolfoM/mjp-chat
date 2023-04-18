@@ -6,9 +6,10 @@ import { useContext } from "react";
 import { AuthContext } from "../auth/context";
 import { DocumentData } from "firebase/firestore";
 import StatusIndicator from "./StatusIndicator";
+import { User } from "../utils/interfaces";
 
 type Props = {
-  userDoc: DocumentData | undefined;
+  userDoc: User;
 };
 
 const useStyles = createStyles((theme) => ({
@@ -35,7 +36,7 @@ function CurrentUser(props: Props) {
       <SettingsModal opened={opened} close={close} />
       <div className={classes.container}>
         <div className={classes.user}>
-          <StatusIndicator user={currentUser} borderColor={6}>
+          <StatusIndicator user={props.userDoc} borderColor={6}>
             <Avatar size={35} radius="xl" color={props.userDoc?.color} />
           </StatusIndicator>
           <Text fw="bold" fz="xs" truncate>

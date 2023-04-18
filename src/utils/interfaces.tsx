@@ -4,5 +4,11 @@ export interface User {
   email: string;
   uid: string;
   username: string;
-  chats?: Array<string>;
+  friends?: Array<string>;
+}
+
+export interface Chat {
+  id: string,
+  lastMessage: string,
+  users: Array<string>
 }
