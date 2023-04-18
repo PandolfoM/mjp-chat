@@ -1,7 +1,16 @@
 import { useIdle, useLocalStorage } from "@mantine/hooks";
-import { Dispatch, SetStateAction, createContext, useState } from "react";
-import useStatus from "../hooks/useStatus";
+import {
+  Dispatch,
+  SetStateAction,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useBeforeUnload } from "react-router-dom";
+import { AuthContext } from "../auth/context";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
 interface StatusContext {
   status: string;
@@ -18,16 +27,21 @@ export const StatusContext = createContext<StatusContext>({
 });
 
 export const StatusContextProvider = (props: React.PropsWithChildren<{}>) => {
-  const { updateStatus } = useStatus();
-  const [status, setStatus] = useLocalStorage({
-    key: "user-status",
-    defaultValue: "online",
-  });
+  const { currentUser } = useContext(AuthContext);
+  const [status, setStatus] = useState<string>("online");
   const [currentPage, setCurrentPage] = useState<string>("");
-  const idle = useIdle(600000, {
-    initialState: status === "online" ? false : true,
-  });
+  const idle = useIdle(5000);
+
+  const updateStatus = async (idle: string) => {
+    if (currentUser) {
+      await updateDoc(doc(db, "users", currentUser?.uid), {
+        status: idle,
+      });
+    }
+  };
+
   updateStatus(idle ? "idle" : "online");
+
   useBeforeUnload(() => updateStatus("offline"));
 
   return (

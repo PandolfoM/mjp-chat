@@ -7,8 +7,6 @@ import { AuthContext } from "../auth/context";
 import {
   DocumentData,
   collection,
-  doc,
-  getDoc,
   limit,
   onSnapshot,
   orderBy,
@@ -19,7 +17,6 @@ import { StatusContext } from "../context/StatusContext";
 import FriendsList from "../pages/FriendsList";
 import CurrentUser from "../components/CurrentUser";
 import FriendsButton from "../components/FriendsButton";
-import { User } from "../utils/interfaces";
 
 const useStyles = createStyles((theme) => ({
   home_page: {
@@ -56,24 +53,10 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function Home() {
-  const [userDoc, setUserDoc] = useState<User>();
   const [messages, setMessages] = useState<DocumentData[]>([]);
-  const { currentUser, loading } = useContext(AuthContext);
+  const { loading } = useContext(AuthContext);
   const { currentPage } = useContext(StatusContext);
   const { classes } = useStyles();
-
-  useEffect(() => {
-    const unsub = async () => {
-      if (currentUser) {
-        const docSnap = await getDoc(doc(db, "users", currentUser?.uid));
-        setUserDoc(docSnap.data() as User);
-      }
-    };
-
-    return () => {
-      unsub();
-    };
-  }, []);
 
   useEffect(() => {
     const unsub = async () => {
@@ -102,20 +85,18 @@ function Home() {
         <FriendsButton />
         <Divider my="sm" />
         <div className={classes.allChats}>
-          <Chats userDoc={userDoc} />
+          <Chats />
         </div>
-        {userDoc && (
-          <div className={classes.currentUser}>
-            <CurrentUser userDoc={userDoc} />
-          </div>
-        )}
+        <div className={classes.currentUser}>
+          <CurrentUser />
+        </div>
       </nav>
 
       {currentPage && (
         <div className={classes.content}>
           {currentPage === "friends" && <FriendsList />}
 
-          <ChatMessages chatData={messages} userDoc={userDoc} />
+          <ChatMessages chatData={messages} />
           <ChatBox />
         </div>
       )}

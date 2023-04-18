@@ -27,8 +27,14 @@ import { User } from "../utils/interfaces";
 import { StatusContext } from "../context/StatusContext";
 
 export default function useAuth() {
-  const { currentUser, setCurrentUser, setFriends } = useContext(AuthContext);
+  const { currentUser, setCurrentUser, setFriends, setCurrentUserDoc } =
+    useContext(AuthContext);
   const { setCurrentPage } = useContext(StatusContext);
+
+  const getUserDoc = async () => {
+    const docSnap = await getDoc(doc(db, "users", currentUser?.uid));
+    setCurrentUserDoc(docSnap.data() as User);
+  };
 
   const registerUser = async (
     email: string,
@@ -182,5 +188,6 @@ export default function useAuth() {
     removeFriend,
     removeFriendRequest,
     acceptFriend,
+    getUserDoc,
   };
 }

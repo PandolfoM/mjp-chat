@@ -11,7 +11,6 @@ interface ChatData {
 
 type Props = {
   chatData: DocumentData | undefined;
-  userDoc: DocumentData | undefined;
 };
 
 const useStyles = createStyles((theme) => ({

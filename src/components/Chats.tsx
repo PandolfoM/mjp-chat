@@ -1,6 +1,5 @@
 import UserChat from "./UserChat";
 import {
-  DocumentData,
   collection,
   onSnapshot,
   query,
@@ -11,11 +10,7 @@ import { AuthContext } from "../auth/context";
 import { Chat } from "../utils/interfaces";
 import { db } from "../firebase";
 
-type Props = {
-  userDoc: DocumentData | undefined;
-};
-
-function Chats(props: Props) {
+function Chats() {
   const { currentUser } = useContext(AuthContext);
   const [chats, setChats] = useState<Array<Chat>>([]);
 
@@ -34,8 +29,8 @@ function Chats(props: Props) {
       });
     };
 
-    props.userDoc && unsub();
-  }, [props.userDoc]);
+    currentUser && unsub();
+  }, []);
 
   return (
     <>
