@@ -10,6 +10,7 @@ import {
 import { Trash } from "react-feather";
 import { User } from "../utils/interfaces";
 import useAuth from "../hooks/useAuth";
+import useMessages from "../hooks/useMessages";
 
 type Props = {
   status: string;
@@ -38,6 +39,7 @@ function OnlineFriends(props: Props) {
   const { classes } = useStyles();
   const { friends } = useContext(AuthContext);
   const { removeFriend } = useAuth();
+  const { findMessage } = useMessages();
   const theme = useMantineTheme();
   const [onlineFriends, setOnlineFriends] = useState(friends);
 
@@ -56,7 +58,10 @@ function OnlineFriends(props: Props) {
   return (
     <>
       {onlineFriends?.map((i: User) => (
-        <div className={classes.container} key={i.uid}>
+        <div
+          className={classes.container}
+          key={i.uid}
+          onClick={() => findMessage(i.uid)}>
           <div className={classes.btnContainer}>
             <UserButton user={i} />
           </div>
