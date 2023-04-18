@@ -7,6 +7,7 @@ import { AuthContext } from "../auth/context";
 import { DocumentData } from "firebase/firestore";
 import StatusIndicator from "./StatusIndicator";
 import { User } from "../utils/interfaces";
+import { StatusContext } from "../context/StatusContext";
 
 type Props = {
   userDoc: User;
@@ -30,13 +31,14 @@ function CurrentUser(props: Props) {
   const { currentUser } = useContext(AuthContext);
   const { classes } = useStyles();
   const [opened, { open, close }] = useDisclosure(false);
+  const { status } = useContext(StatusContext);
 
   return (
     <>
       <SettingsModal opened={opened} close={close} />
       <div className={classes.container}>
         <div className={classes.user}>
-          <StatusIndicator user={props.userDoc} borderColor={6}>
+          <StatusIndicator user={props.userDoc} status={status} borderColor={6}>
             <Avatar size={35} radius="xl" color={props.userDoc?.color} />
           </StatusIndicator>
           <Text fw="bold" fz="xs" truncate>

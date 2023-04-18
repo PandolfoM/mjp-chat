@@ -78,8 +78,8 @@ function Home() {
   useEffect(() => {
     const unsub = async () => {
       const msgsRef = collection(db, "chats", currentPage, "messages");
-      const q = query(msgsRef, orderBy("sentAt", "desc"), limit(20));
-      onSnapshot(q, (doc) => {
+      const q = query(msgsRef, orderBy("sentAt", "asc"), limit(20));
+      const unsub = onSnapshot(q, (doc) => {
         setMessages(
           doc.docs.map((i) => ({
             sentAt: i.data().sentAt,
@@ -88,6 +88,8 @@ function Home() {
           }))
         );
       });
+
+      return unsub;
     };
 
     currentPage && unsub();

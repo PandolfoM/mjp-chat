@@ -19,7 +19,7 @@ const useStyles = createStyles((theme) => ({
     flex: 1,
     overflowY: "auto",
     display: "flex",
-    flexDirection: "column-reverse",
+    flexDirection: "column",
     gap: theme.spacing.lg,
     paddingBottom: theme.spacing.lg,
   },
@@ -36,7 +36,7 @@ function ChatMessages(props: Props) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    ref.current?.scrollIntoView();
+    ref.current?.scrollIntoView({ block: "start" });
   }, [props.chatData]);
 
   return (

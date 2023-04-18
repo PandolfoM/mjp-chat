@@ -17,7 +17,11 @@ function UserButton(props: Props) {
   const { classes } = useStyles();
   return (
     <>
-      <StatusIndicator user={props.user} size={18} offset={7}>
+      <StatusIndicator
+        user={props.user}
+        status={props.user.status}
+        size={18}
+        offset={7}>
         <Avatar size={48} radius="xl" color={props.user.color} />
       </StatusIndicator>
       <div className={classes.content}>

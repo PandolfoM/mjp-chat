@@ -7,6 +7,7 @@ type Props = {
   offset?: number;
   borderColor?: number;
   children: JSX.Element;
+  status: string;
 };
 
 interface Status {
@@ -29,9 +30,9 @@ function StatusIndicator(props: Props) {
       size={props.size || 13}
       classNames={{ indicator: classes.indicator }}
       color={
-        props.user?.status === "idle"
+        props.status === "idle"
           ? "yellow"
-          : props.user?.status === "offline"
+          : props.status === "offline"
           ? "grey"
           : "green"
       }>
