@@ -19,7 +19,7 @@ const useStyles = createStyles((theme) => ({
     flex: 1,
     overflowY: "auto",
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "column-reverse",
     gap: theme.spacing.lg,
     paddingBottom: theme.spacing.lg,
   },

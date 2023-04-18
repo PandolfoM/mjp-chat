@@ -8,6 +8,7 @@ import {
   DocumentData,
   collection,
   doc,
+  getDoc,
   limit,
   onSnapshot,
   orderBy,
@@ -62,22 +63,30 @@ function Home() {
   const { classes } = useStyles();
 
   useEffect(() => {
-    if (currentUser) {
-      onSnapshot(doc(db, "users", currentUser?.uid), (doc) => {
-        setUserDoc(doc.data() as User);
-      });
-    }
+    const unsub = async () => {
+      if (currentUser) {
+        const docSnap = await getDoc(doc(db, "users", currentUser?.uid));
+        setUserDoc(docSnap.data() as User);
+      }
+    };
+
+    return () => {
+      unsub();
+    };
   }, []);
 
   useEffect(() => {
     const unsub = async () => {
       const msgsRef = collection(db, "chats", currentPage, "messages");
-      const q = query(msgsRef, orderBy("sentAt"), limit(20));
+      const q = query(msgsRef, orderBy("sentAt", "desc"), limit(20));
       onSnapshot(q, (doc) => {
-        setMessages([]);
-        doc.forEach((e) => {
-          setMessages((current) => [...current, e.data()]);
-        });
+        setMessages(
+          doc.docs.map((i) => ({
+            sentAt: i.data().sentAt,
+            sentBy: i.data().sentBy,
+            text: i.data().text,
+          }))
+        );
       });
     };
 
