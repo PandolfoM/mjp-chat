@@ -74,7 +74,7 @@ function Home() {
       return unsub;
     };
 
-    unsub();
+    currentPage && unsub();
   }, [currentPage]);
 
   return (

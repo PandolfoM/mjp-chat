@@ -5,11 +5,12 @@ import {
   createStyles,
   useMantineTheme,
 } from "@mantine/core";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import AddFriendModal from "../components/AddFriendModal";
 import { useDisclosure } from "@mantine/hooks";
 import FriendsList from "./FriendsList";
 import PendingFriends from "./PendingFriends";
+import { AuthContext } from "../auth/context";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -53,10 +54,11 @@ function Friends() {
   const [opened, { open, close }] = useDisclosure(false);
   const theme = useMantineTheme();
   const { classes } = useStyles();
+  const { currentUser } = useContext(AuthContext);
 
   return (
     <>
-      <AddFriendModal opened={opened} close={close} />
+      {currentUser && <AddFriendModal opened={opened} close={close} />}
       <nav className={classes.nav}>
         <div className={classes.navItems}>
           <Title order={3}>Friends</Title>
@@ -84,7 +86,7 @@ function Friends() {
           </Button>
         </div>
         <div className={classes.navItems}>
-          <Button compact size="xs" onClick={open}>
+          <Button compact size="xs" onClick={open} disabled={!currentUser}>
             Add Friend
           </Button>
         </div>

@@ -1,9 +1,4 @@
-import {
-  Dispatch,
-  SetStateAction,
-  createContext,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, createContext, useState } from "react";
 
 interface PageContext {
   currentPage: string;
@@ -11,12 +6,12 @@ interface PageContext {
 }
 
 export const PageContext = createContext<PageContext>({
-  currentPage: "",
+  currentPage: "friends",
   setCurrentPage: () => {},
 });
 
 export const PageContextProvider = (props: React.PropsWithChildren<{}>) => {
-  const [currentPage, setCurrentPage] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState<string>("friends");
 
   return (
     <PageContext.Provider value={{ currentPage, setCurrentPage }}>
