@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import { MantineProvider, MantineThemeOverride } from "@mantine/core";
 import { AuthContextProvider } from "./auth/context";
+import { PageContextProvider } from "./context/pageContext";
 
 const mantineTheme: MantineThemeOverride = {
   colorScheme: "dark",
@@ -51,9 +52,11 @@ const mantineTheme: MantineThemeOverride = {
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <AuthContextProvider>
-      <MantineProvider theme={mantineTheme} withNormalizeCSS withGlobalStyles>
-        <App />
-      </MantineProvider>
+      <PageContextProvider>
+        <MantineProvider theme={mantineTheme} withNormalizeCSS withGlobalStyles>
+          <App />
+        </MantineProvider>
+      </PageContextProvider>
     </AuthContextProvider>
   </React.StrictMode>
 );

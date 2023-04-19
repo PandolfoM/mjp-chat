@@ -16,6 +16,7 @@ import { db } from "../firebase";
 import FriendsList from "./Friends";
 import CurrentUser from "../components/CurrentUser";
 import FriendsButton from "../components/FriendsButton";
+import { PageContext } from "../context/pageContext";
 
 const useStyles = createStyles((theme) => ({
   home_page: {
@@ -53,7 +54,8 @@ const useStyles = createStyles((theme) => ({
 
 function Home() {
   const [messages, setMessages] = useState<DocumentData[]>([]);
-  const { loading, currentPage } = useContext(AuthContext);
+  const { loading } = useContext(AuthContext);
+  const { currentPage } = useContext(PageContext);
   const { classes } = useStyles();
 
   useEffect(() => {
@@ -73,7 +75,9 @@ function Home() {
       return unsub;
     };
 
-    currentPage && unsub();
+    return () => {
+      currentPage && unsub();
+    };
   }, [currentPage]);
 
   return (

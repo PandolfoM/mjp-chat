@@ -24,15 +24,12 @@ import { randomPfpColor } from "../utils/helpers";
 import { useContext } from "react";
 import { AuthContext } from "../auth/context";
 import { User } from "../utils/interfaces";
+import { PageContext } from "../context/pageContext";
 
 export default function useAuth() {
-  const {
-    currentUser,
-    setCurrentUser,
-    setFriends,
-    setCurrentPage,
-    setCurrentUserDoc,
-  } = useContext(AuthContext);
+  const { currentUser, setCurrentUser, setFriends, setCurrentUserDoc } =
+    useContext(AuthContext);
+  const { setCurrentPage } = useContext(PageContext);
 
   const getUserDoc = async () => {
     const docSnap = await getDoc(doc(db, "users", currentUser?.uid));

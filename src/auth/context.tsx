@@ -18,8 +18,6 @@ interface AuthContext {
   loading: boolean;
   currentUserDoc?: User;
   setCurrentUserDoc: Dispatch<SetStateAction<User>>;
-  currentPage: string;
-  setCurrentPage: Dispatch<SetStateAction<string>>;
 }
 
 export const AuthContext = createContext<AuthContext>({
@@ -30,14 +28,11 @@ export const AuthContext = createContext<AuthContext>({
   loading: true,
   currentUserDoc: { color: "", email: "", uid: "", username: "" },
   setCurrentUserDoc: () => {},
-  currentPage: "",
-  setCurrentPage: () => {},
 });
 
 export const AuthContextProvider = (props: React.PropsWithChildren<{}>) => {
   const [friends, setFriends] = useState<Array<User>>([]);
   const [currentUser, setCurrentUser] = useState<any>(null);
-  const [currentPage, setCurrentPage] = useState<string>("");
   const [currentUserDoc, setCurrentUserDoc] = useState<User>({
     color: "",
     email: "",
@@ -76,8 +71,6 @@ export const AuthContextProvider = (props: React.PropsWithChildren<{}>) => {
         setFriends,
         currentUserDoc,
         setCurrentUserDoc,
-        currentPage,
-        setCurrentPage,
       }}>
       {props.children}
     </AuthContext.Provider>

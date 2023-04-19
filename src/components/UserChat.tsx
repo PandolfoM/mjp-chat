@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import { db } from "../firebase";
 import { AuthContext } from "../auth/context";
 import UserButton from "./UserButton";
+import { PageContext } from "../context/pageContext";
 
 type Props = {
   chat: Chat;
@@ -31,7 +32,7 @@ const useStyles = createStyles((theme) => ({
 function UserChat(props: Props) {
   const [user, setUser] = useState<User>();
   const { classes } = useStyles();
-  const { setCurrentPage, currentPage } = useContext(AuthContext);
+  const { currentPage, setCurrentPage } = useContext(PageContext);
   const { currentUser } = useContext(AuthContext);
   const theme = useMantineTheme();
 
