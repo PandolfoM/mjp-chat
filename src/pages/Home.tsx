@@ -74,9 +74,7 @@ function Home() {
       return unsub;
     };
 
-    return () => {
-      currentPage && unsub();
-    };
+    unsub();
   }, [currentPage]);
 
   return (
