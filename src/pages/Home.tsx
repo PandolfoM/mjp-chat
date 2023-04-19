@@ -13,10 +13,10 @@ import {
   query,
 } from "firebase/firestore";
 import { db } from "../firebase";
-import FriendsList from "./Friends";
+import { PageContext } from "../context/PageContext";
+import Friends from "./Friends";
 import CurrentUser from "../components/CurrentUser";
 import FriendsButton from "../components/FriendsButton";
-import { PageContext } from "../context/pageContext";
 
 const useStyles = createStyles((theme) => ({
   home_page: {
@@ -26,7 +26,6 @@ const useStyles = createStyles((theme) => ({
     flex: 1,
     height: "100vh",
     display: "flex",
-    justifyContent: "end",
     flexDirection: "column",
     overflow: "hidden",
     padding: theme.spacing.md,
@@ -96,10 +95,14 @@ function Home() {
 
       {currentPage && (
         <div className={classes.content}>
-          {currentPage === "friends" && <FriendsList />}
-
-          <ChatMessages chatData={messages} />
-          <ChatBox />
+          {currentPage !== "friends" ? (
+            <>
+              <ChatMessages chatData={messages} />
+              <ChatBox />
+            </>
+          ) : (
+            <Friends />
+          )}
         </div>
       )}
     </div>

@@ -11,11 +11,11 @@ import {
 import { db } from "../firebase";
 import { useContext } from "react";
 import { AuthContext } from "../auth/context";
-import { PageContext } from "../context/pageContext";
+import { PageContext } from "../context/PageContext";
 
 export default function useMessages() {
+  const { currentPage, setCurrentPage } = useContext(PageContext);
   const { currentUser } = useContext(AuthContext);
-  const { setCurrentPage, currentPage } = useContext(PageContext);
 
   const addMessage = async (text: string) => {
     const ref = collection(db, "chats", currentPage, "messages");

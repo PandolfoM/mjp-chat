@@ -11,6 +11,7 @@ import { Trash } from "react-feather";
 import { User } from "../utils/interfaces";
 import useAuth from "../hooks/useAuth";
 import useMessages from "../hooks/useMessages";
+
 const useStyles = createStyles((theme) => ({
   container: {
     display: "flex",

@@ -24,7 +24,7 @@ import { randomPfpColor } from "../utils/helpers";
 import { useContext } from "react";
 import { AuthContext } from "../auth/context";
 import { User } from "../utils/interfaces";
-import { PageContext } from "../context/pageContext";
+import { PageContext } from "../context/PageContext";
 
 export default function useAuth() {
   const { currentUser, setCurrentUser, setFriends, setCurrentUserDoc } =

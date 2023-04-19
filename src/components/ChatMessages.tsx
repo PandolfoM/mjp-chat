@@ -35,13 +35,15 @@ function ChatMessages(props: Props) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    ref.current?.scrollIntoView({ block: "start" });
+    if (ref.current) {
+      ref.current.scrollTop = ref.current.scrollHeight;
+    }
   }, [props.chatData]);
 
   return (
-    <div className={classes.container}>
+    <div className={classes.container} ref={ref}>
       {props.chatData?.map((i: ChatData) => (
-        <div ref={ref} className={classes.message} key={i.sentAt}>
+        <div className={classes.message} key={i.sentAt}>
           <Chat data={i} />
         </div>
       ))}
