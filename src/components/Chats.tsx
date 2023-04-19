@@ -1,6 +1,7 @@
 import UserChat from "./UserChat";
 import {
   collection,
+  getDocs,
   onSnapshot,
   query,
   where,
@@ -29,7 +30,9 @@ function Chats() {
       });
     };
 
-    currentUser && unsub();
+    return () => {
+      currentUser && unsub();
+    };
   }, []);
 
   return (

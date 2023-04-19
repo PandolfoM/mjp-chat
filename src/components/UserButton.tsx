@@ -1,4 +1,3 @@
-import StatusIndicator from "./StatusIndicator";
 import { Avatar, Text, createStyles } from "@mantine/core";
 import { User } from "../utils/interfaces";
 
@@ -17,13 +16,7 @@ function UserButton(props: Props) {
   const { classes } = useStyles();
   return (
     <>
-      <StatusIndicator
-        user={props.user}
-        status={props.user.status}
-        size={18}
-        offset={7}>
-        <Avatar size={48} radius="xl" color={props.user.color} />
-      </StatusIndicator>
+      <Avatar size={48} radius="xl" color={props.user.color} />
       <div className={classes.content}>
         <Text fw="bold" truncate>
           {props.user.username}

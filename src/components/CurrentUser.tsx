@@ -4,8 +4,6 @@ import { Settings } from "react-feather";
 import SettingsModal from "./SettingsModal";
 import { useContext } from "react";
 import { AuthContext } from "../auth/context";
-import StatusIndicator from "./StatusIndicator";
-import { StatusContext } from "../context/StatusContext";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -25,21 +23,13 @@ function CurrentUser() {
   const { currentUser, currentUserDoc } = useContext(AuthContext);
   const { classes } = useStyles();
   const [opened, { open, close }] = useDisclosure(false);
-  const { status } = useContext(StatusContext);
 
   return (
     <>
       <SettingsModal opened={opened} close={close} />
       <div className={classes.container}>
         <div className={classes.user}>
-          {currentUserDoc && (
-            <StatusIndicator
-              user={currentUserDoc}
-              status={status}
-              borderColor={6}>
-              <Avatar size={35} radius="xl" color={currentUserDoc?.color} />
-            </StatusIndicator>
-          )}
+          <Avatar size={35} radius="xl" color={currentUserDoc?.color} />
           <Text fw="bold" fz="xs" truncate>
             {currentUser?.displayName}
           </Text>

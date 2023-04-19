@@ -34,7 +34,7 @@ const useStyles = createStyles((theme) => ({
 function AddFriendModal(props: Props) {
   const { classes } = useStyles();
   const { addFriend } = useAuth();
-  const { currentUser, friends, setFriends } = useContext(AuthContext);
+  const { currentUser, friends } = useContext(AuthContext);
   const [searchedEmail, setSearchedEmail] = useState<string>("");
   const [debounced] = useDebouncedValue(searchedEmail, 200);
   const [foundUser, setFoundUser] = useState<User | null>(null);

@@ -24,12 +24,15 @@ import { randomPfpColor } from "../utils/helpers";
 import { useContext } from "react";
 import { AuthContext } from "../auth/context";
 import { User } from "../utils/interfaces";
-import { StatusContext } from "../context/StatusContext";
 
 export default function useAuth() {
-  const { currentUser, setCurrentUser, setFriends, setCurrentUserDoc } =
-    useContext(AuthContext);
-  const { setCurrentPage } = useContext(StatusContext);
+  const {
+    currentUser,
+    setCurrentUser,
+    setFriends,
+    setCurrentPage,
+    setCurrentUserDoc,
+  } = useContext(AuthContext);
 
   const getUserDoc = async () => {
     const docSnap = await getDoc(doc(db, "users", currentUser?.uid));
@@ -52,7 +55,6 @@ export default function useAuth() {
           username,
           email,
           color: randomPfpColor(),
-          status: "online",
           uid: createUser.user.uid,
         });
         await setDoc(doc(db, "emails", email), {

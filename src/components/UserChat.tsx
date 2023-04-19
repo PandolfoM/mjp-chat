@@ -2,7 +2,6 @@ import { Box, createStyles, useMantineTheme } from "@mantine/core";
 import { Chat, User } from "../utils/interfaces";
 import { doc, getDoc } from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
-import { StatusContext } from "../context/StatusContext";
 import { db } from "../firebase";
 import { AuthContext } from "../auth/context";
 import UserButton from "./UserButton";
@@ -32,7 +31,7 @@ const useStyles = createStyles((theme) => ({
 function UserChat(props: Props) {
   const [user, setUser] = useState<User>();
   const { classes } = useStyles();
-  const { setCurrentPage, currentPage } = useContext(StatusContext);
+  const { setCurrentPage, currentPage } = useContext(AuthContext);
   const { currentUser } = useContext(AuthContext);
   const theme = useMantineTheme();
 
@@ -52,7 +51,9 @@ function UserChat(props: Props) {
       }
     };
 
-    unsub();
+    return () => {
+      unsub();
+    };
   }, []);
 
   return (

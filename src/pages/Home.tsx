@@ -13,8 +13,7 @@ import {
   query,
 } from "firebase/firestore";
 import { db } from "../firebase";
-import { StatusContext } from "../context/StatusContext";
-import FriendsList from "../pages/FriendsList";
+import FriendsList from "./Friends";
 import CurrentUser from "../components/CurrentUser";
 import FriendsButton from "../components/FriendsButton";
 
@@ -54,14 +53,13 @@ const useStyles = createStyles((theme) => ({
 
 function Home() {
   const [messages, setMessages] = useState<DocumentData[]>([]);
-  const { loading } = useContext(AuthContext);
-  const { currentPage } = useContext(StatusContext);
+  const { loading, currentPage } = useContext(AuthContext);
   const { classes } = useStyles();
 
   useEffect(() => {
     const unsub = async () => {
       const msgsRef = collection(db, "chats", currentPage, "messages");
-      const q = query(msgsRef, orderBy("sentAt", "asc"), limit(20));
+      const q = query(msgsRef, orderBy("sentAt", "desc"), limit(20));
       const unsub = onSnapshot(q, (doc) => {
         setMessages(
           doc.docs.map((i) => ({

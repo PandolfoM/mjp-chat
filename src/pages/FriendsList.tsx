@@ -1,16 +1,16 @@
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../auth/context";
+import UserButton from "../components/UserButton";
 import {
-  Button,
-  Divider,
-  Title,
+  ActionIcon,
+  Tooltip,
   createStyles,
   useMantineTheme,
 } from "@mantine/core";
-import { useState } from "react";
-import AddFriendModal from "../components/AddFriendModal";
-import { useDisclosure } from "@mantine/hooks";
-import OnlineFriends from "./OnlineFriends";
-import PendingFriends from "./PendingFriends";
-
+import { Trash } from "react-feather";
+import { User } from "../utils/interfaces";
+import useAuth from "../hooks/useAuth";
+import useMessages from "../hooks/useMessages";
 const useStyles = createStyles((theme) => ({
   container: {
     display: "flex",
@@ -23,90 +23,41 @@ const useStyles = createStyles((theme) => ({
       backgroundColor: theme.colors.dark[6],
     },
   },
-
   btnContainer: {
     display: "flex",
     alignItems: "center",
     gap: theme.spacing.xs,
   },
-
-  nav: {
-    display: "flex",
-    gap: theme.spacing.xl,
-    alignItems: "center",
-  },
-  navItems: {
-    display: "flex",
-    gap: theme.spacing.sm,
-  },
-  textColor: {
-    color: theme.colors.dark[0],
-    padding: theme.spacing.xs,
-    "&:hover": {
-      backgroundColor: theme.colors.dark[6],
-    },
-  },
 }));
 
 function FriendsList() {
-  const [currentList, setCurrentList] = useState<string>("online");
-  const [opened, { open, close }] = useDisclosure(false);
-  const theme = useMantineTheme();
   const { classes } = useStyles();
+  const { friends } = useContext(AuthContext);
+  const { removeFriend } = useAuth();
+  const { findMessage } = useMessages();
+  const theme = useMantineTheme();
 
   return (
     <>
-      <AddFriendModal opened={opened} close={close} />
-      <nav className={classes.nav}>
-        <div className={classes.navItems}>
-          <Title order={3}>Friends</Title>
+      {friends?.map((i: User) => (
+        <div
+          className={classes.container}
+          key={i.uid}
+          onClick={() => findMessage(i.uid)}>
+          <div className={classes.btnContainer}>
+            <UserButton user={i} />
+          </div>
+          <Tooltip label="Delete" color="gray" withArrow>
+            <ActionIcon
+              radius="xl"
+              variant="light"
+              size="xl"
+              onClick={() => removeFriend(i.uid)}>
+              <Trash size={theme.fontSizes.lg} color={theme.colors.dark[0]} />
+            </ActionIcon>
+          </Tooltip>
         </div>
-        <div className={classes.navItems}>
-          <Button
-            variant="subtle"
-            className={classes.textColor}
-            sx={{
-              backgroundColor:
-                currentList === "online" ? theme.colors.dark[5] : "inherit",
-            }}
-            onClick={() => setCurrentList("online")}>
-            Online
-          </Button>
-          <Button
-            variant="subtle"
-            className={classes.textColor}
-            sx={{
-              backgroundColor:
-                currentList === "all" ? theme.colors.dark[5] : "inherit",
-            }}
-            onClick={() => setCurrentList("all")}>
-            All
-          </Button>
-          <Button
-            variant="subtle"
-            className={classes.textColor}
-            sx={{
-              backgroundColor:
-                currentList === "pending" ? theme.colors.dark[5] : "inherit",
-            }}
-            onClick={() => setCurrentList("pending")}>
-            Pending
-          </Button>
-        </div>
-        <div className={classes.navItems}>
-          <Button compact size="xs" onClick={open}>
-            Add Friend
-          </Button>
-        </div>
-      </nav>
-      <Divider my="sm" />
-      {
-        {
-          online: <OnlineFriends status="offline" />,
-          all: <OnlineFriends status="all" />,
-          pending: <PendingFriends />,
-        }[currentList]
-      }
+      ))}
     </>
   );
 }

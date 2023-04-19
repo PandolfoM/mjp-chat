@@ -1,7 +1,7 @@
 import { Button, createStyles } from "@mantine/core";
 import { useContext } from "react";
 import { Users } from "react-feather";
-import { StatusContext } from "../context/StatusContext";
+import { AuthContext } from "../auth/context";
 
 const useStyles = createStyles((theme) => ({
   button: {
@@ -14,7 +14,7 @@ const useStyles = createStyles((theme) => ({
 
 function FriendsButton() {
   const { classes } = useStyles();
-  const { setCurrentPage } = useContext(StatusContext);
+  const { setCurrentPage } = useContext(AuthContext);
 
   return (
     <Button

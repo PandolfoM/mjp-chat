@@ -1,6 +1,5 @@
 export interface User {
   color: string;
-  status: string;
   email: string;
   uid: string;
   username: string;
@@ -8,7 +7,7 @@ export interface User {
 }
 
 export interface Chat {
-  id: string,
-  lastMessage: string,
-  users: Array<string>
+  id: string;
+  lastMessage: string;
+  users: Array<string>;
 }
