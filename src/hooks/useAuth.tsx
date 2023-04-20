@@ -14,6 +14,7 @@ import {
   getDoc,
   getDocs,
   onSnapshot,
+  or,
   orderBy,
   query,
   setDoc,
@@ -144,6 +145,7 @@ export default function useAuth() {
       friends: arrayRemove(currentUser.uid),
     });
     setFriends((current) => current.filter((i) => i.uid !== friendUid));
+    setCurrentPage("friends");
   };
 
   const removeFriendRequest = async (id: string) => {
@@ -156,7 +158,10 @@ export default function useAuth() {
     const friendUserRef = doc(db, "users", fromId);
     const q = query(
       collection(db, "chats"),
-      where("users", "==", [currentUser.uid, fromId])
+      or(
+        where("users", "==", [currentUser.uid, fromId]),
+        where("users", "==", [fromId, currentUser.uid])
+      )
     );
 
     await updateDoc(currentUserRef, {
