@@ -38,7 +38,9 @@ function Chats() {
   return (
     <>
       {chats.map((i: Chat) => (
-        <UserChat chat={i} key={i.id} />
+        <div key={i.id}>
+          <UserChat chat={i} />
+        </div>
       ))}
     </>
   );

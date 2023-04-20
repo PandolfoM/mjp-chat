@@ -27,12 +27,11 @@ import { User } from "../utils/interfaces";
 import { PageContext } from "../context/PageContext";
 
 export default function useAuth() {
-  const { currentUser, setCurrentUser, setFriends, setCurrentUserDoc } =
-    useContext(AuthContext);
+  const { currentUser, setCurrentUser, setFriends } = useContext(AuthContext);
   const { setCurrentPage } = useContext(PageContext);
 
-  const getUserDoc = async () => {
-    const docSnap = await getDoc(doc(db, "users", currentUser?.uid));
+  const getUserDoc = async (setCurrentUserDoc: any, user: any) => {
+    const docSnap = await getDoc(doc(db, "users", user.uid));
     setCurrentUserDoc(docSnap.data() as User);
   };
 
@@ -155,6 +154,10 @@ export default function useAuth() {
   const acceptFriend = async (id: string, fromId: string) => {
     const currentUserRef = doc(db, "users", currentUser.uid);
     const friendUserRef = doc(db, "users", fromId);
+    const q = query(
+      collection(db, "chats"),
+      where("users", "==", [currentUser.uid, fromId])
+    );
 
     await updateDoc(currentUserRef, {
       friends: arrayUnion(fromId),
@@ -164,19 +167,30 @@ export default function useAuth() {
       friends: arrayUnion(currentUser.uid),
     });
 
-    const createChat = await addDoc(collection(db, "chats"), {
-      lastMessage: "",
-      users: [currentUser.uid, fromId],
+    const existingChat = await getDocs(q);
+    let existingChatId: string = "";
+    existingChat.forEach((doc) => {
+      if (doc.exists()) {
+        existingChatId = doc.data().id;
+      }
     });
 
-    await updateDoc(doc(db, "chats", createChat.id), {
-      id: createChat.id,
-    });
+    if (!existingChatId) {
+      const createChat = await addDoc(collection(db, "chats"), {
+        lastMessage: "",
+        users: [currentUser.uid, fromId],
+      });
+
+      await updateDoc(doc(db, "chats", createChat.id), {
+        id: createChat.id,
+      });
+      setCurrentPage(createChat.id);
+    } else {
+      setCurrentPage(existingChatId);
+    }
 
     const ref = doc(db, "requests", id);
     await deleteDoc(ref);
-
-    setCurrentPage(createChat.id);
   };
 
   return {

@@ -30,7 +30,7 @@ function CurrentUser() {
       <div className={classes.container}>
         <div className={classes.user}>
           {currentUserDoc && (
-            <Avatar size={35} radius="xl" color={currentUserDoc?.color} />
+            <Avatar size={35} radius="xl" color={currentUserDoc.color} />
           )}
           <Text fw="bold" fz="xs" truncate>
             {currentUser?.displayName}

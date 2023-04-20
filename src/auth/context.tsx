@@ -47,9 +47,7 @@ export const AuthContextProvider = (props: React.PropsWithChildren<{}>) => {
       if (user) {
         setCurrentUser(user);
         getFriends(setFriends, user);
-        if (currentUser) {
-          getUserDoc();
-        }
+        getUserDoc(setCurrentUserDoc, user);
         setLoading(false);
       } else {
         setLoading(false);
