@@ -10,4 +10,5 @@ export interface Chat {
   id: string;
   lastMessage: string;
   users: Array<string>;
+  hidden?: Array<string>;
 }

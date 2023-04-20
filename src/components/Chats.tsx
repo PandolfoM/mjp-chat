@@ -24,7 +24,11 @@ function Chats() {
       onSnapshot(q, (querySnapshot) => {
         const arr: Array<Chat> = [];
         querySnapshot.forEach((doc) => {
-          arr.push(doc.data() as Chat);
+          if (doc.data().hidden?.find((i: string) => i === currentUser.uid)) {
+            return;
+          } else {
+            arr.push(doc.data() as Chat);
+          }
         });
         setChats(arr);
       });
