@@ -7,18 +7,16 @@ import { AuthContext } from "../auth/context";
 import {
   DocumentData,
   collection,
-  doc,
   limit,
   onSnapshot,
   orderBy,
   query,
 } from "firebase/firestore";
 import { db } from "../firebase";
-import { StatusContext } from "../context/StatusContext";
-import FriendsList from "../pages/FriendsList";
+import { PageContext } from "../context/PageContext";
+import Friends from "./Friends";
 import CurrentUser from "../components/CurrentUser";
 import FriendsButton from "../components/FriendsButton";
-import { User } from "../utils/interfaces";
 
 const useStyles = createStyles((theme) => ({
   home_page: {
@@ -28,7 +26,6 @@ const useStyles = createStyles((theme) => ({
     flex: 1,
     height: "100vh",
     display: "flex",
-    justifyContent: "end",
     flexDirection: "column",
     overflow: "hidden",
     padding: theme.spacing.md,
@@ -55,30 +52,26 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function Home() {
-  const [userDoc, setUserDoc] = useState<User>();
   const [messages, setMessages] = useState<DocumentData[]>([]);
-  const { currentUser, loading } = useContext(AuthContext);
-  const { currentPage } = useContext(StatusContext);
+  const { loading } = useContext(AuthContext);
+  const { currentPage } = useContext(PageContext);
   const { classes } = useStyles();
-
-  useEffect(() => {
-    if (currentUser) {
-      onSnapshot(doc(db, "users", currentUser?.uid), (doc) => {
-        setUserDoc(doc.data() as User);
-      });
-    }
-  }, []);
 
   useEffect(() => {
     const unsub = async () => {
       const msgsRef = collection(db, "chats", currentPage, "messages");
-      const q = query(msgsRef, orderBy("sentAt"), limit(20));
-      onSnapshot(q, (doc) => {
-        setMessages([]);
-        doc.forEach((e) => {
-          setMessages((current) => [...current, e.data()]);
-        });
+      const q = query(msgsRef, orderBy("sentAt", "desc"), limit(20));
+      const unsub = onSnapshot(q, (doc) => {
+        setMessages(
+          doc.docs.map((i) => ({
+            sentAt: i.data().sentAt,
+            sentBy: i.data().sentBy,
+            text: i.data().text,
+          }))
+        );
       });
+
+      return unsub;
     };
 
     currentPage && unsub();
@@ -91,21 +84,23 @@ function Home() {
         <FriendsButton />
         <Divider my="sm" />
         <div className={classes.allChats}>
-          <Chats userDoc={userDoc} />
+          <Chats />
         </div>
-        {userDoc && (
-          <div className={classes.currentUser}>
-            <CurrentUser userDoc={userDoc} />
-          </div>
-        )}
+        <div className={classes.currentUser}>
+          <CurrentUser />
+        </div>
       </nav>
 
       {currentPage && (
         <div className={classes.content}>
-          {currentPage === "friends" && <FriendsList />}
-
-          <ChatMessages chatData={messages} userDoc={userDoc} />
-          <ChatBox />
+          {currentPage !== "friends" ? (
+            <>
+              <ChatMessages chatData={messages} />
+              <ChatBox />
+            </>
+          ) : (
+            <Friends />
+          )}
         </div>
       )}
     </div>

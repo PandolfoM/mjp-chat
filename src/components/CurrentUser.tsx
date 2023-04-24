@@ -4,13 +4,6 @@ import { Settings } from "react-feather";
 import SettingsModal from "./SettingsModal";
 import { useContext } from "react";
 import { AuthContext } from "../auth/context";
-import { DocumentData } from "firebase/firestore";
-import StatusIndicator from "./StatusIndicator";
-import { User } from "../utils/interfaces";
-
-type Props = {
-  userDoc: User;
-};
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -26,8 +19,8 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function CurrentUser(props: Props) {
-  const { currentUser } = useContext(AuthContext);
+function CurrentUser() {
+  const { currentUser, currentUserDoc } = useContext(AuthContext);
   const { classes } = useStyles();
   const [opened, { open, close }] = useDisclosure(false);
 
@@ -36,9 +29,9 @@ function CurrentUser(props: Props) {
       <SettingsModal opened={opened} close={close} />
       <div className={classes.container}>
         <div className={classes.user}>
-          <StatusIndicator user={props.userDoc} borderColor={6}>
-            <Avatar size={35} radius="xl" color={props.userDoc?.color} />
-          </StatusIndicator>
+          {currentUserDoc && (
+            <Avatar size={35} radius="xl" color={currentUserDoc.color} />
+          )}
           <Text fw="bold" fz="xs" truncate>
             {currentUser?.displayName}
           </Text>

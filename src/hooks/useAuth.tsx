@@ -14,6 +14,7 @@ import {
   getDoc,
   getDocs,
   onSnapshot,
+  or,
   orderBy,
   query,
   setDoc,
@@ -24,11 +25,16 @@ import { randomPfpColor } from "../utils/helpers";
 import { useContext } from "react";
 import { AuthContext } from "../auth/context";
 import { User } from "../utils/interfaces";
-import { StatusContext } from "../context/StatusContext";
+import { PageContext } from "../context/PageContext";
 
 export default function useAuth() {
   const { currentUser, setCurrentUser, setFriends } = useContext(AuthContext);
-  const { setCurrentPage } = useContext(StatusContext);
+  const { setCurrentPage } = useContext(PageContext);
+
+  const getUserDoc = async (setCurrentUserDoc: any, user: any) => {
+    const docSnap = await getDoc(doc(db, "users", user.uid));
+    setCurrentUserDoc(docSnap.data() as User);
+  };
 
   const registerUser = async (
     email: string,
@@ -46,7 +52,6 @@ export default function useAuth() {
           username,
           email,
           color: randomPfpColor(),
-          status: "online",
           uid: createUser.user.uid,
         });
         await setDoc(doc(db, "emails", email), {
@@ -140,6 +145,7 @@ export default function useAuth() {
       friends: arrayRemove(currentUser.uid),
     });
     setFriends((current) => current.filter((i) => i.uid !== friendUid));
+    setCurrentPage("friends");
   };
 
   const removeFriendRequest = async (id: string) => {
@@ -150,6 +156,13 @@ export default function useAuth() {
   const acceptFriend = async (id: string, fromId: string) => {
     const currentUserRef = doc(db, "users", currentUser.uid);
     const friendUserRef = doc(db, "users", fromId);
+    const q = query(
+      collection(db, "chats"),
+      or(
+        where("users", "==", [currentUser.uid, fromId]),
+        where("users", "==", [fromId, currentUser.uid])
+      )
+    );
 
     await updateDoc(currentUserRef, {
       friends: arrayUnion(fromId),
@@ -159,19 +172,30 @@ export default function useAuth() {
       friends: arrayUnion(currentUser.uid),
     });
 
-    const createChat = await addDoc(collection(db, "chats"), {
-      lastMessage: "",
-      users: [currentUser.uid, fromId],
+    const existingChat = await getDocs(q);
+    let existingChatId: string = "";
+    existingChat.forEach((doc) => {
+      if (doc.exists()) {
+        existingChatId = doc.data().id;
+      }
     });
 
-    await updateDoc(doc(db, "chats", createChat.id), {
-      id: createChat.id,
-    });
+    if (!existingChatId) {
+      const createChat = await addDoc(collection(db, "chats"), {
+        lastMessage: "",
+        users: [currentUser.uid, fromId],
+      });
+
+      await updateDoc(doc(db, "chats", createChat.id), {
+        id: createChat.id,
+      });
+      setCurrentPage(createChat.id);
+    } else {
+      setCurrentPage(existingChatId);
+    }
 
     const ref = doc(db, "requests", id);
     await deleteDoc(ref);
-
-    setCurrentPage(createChat.id);
   };
 
   return {
@@ -182,5 +206,6 @@ export default function useAuth() {
     removeFriend,
     removeFriendRequest,
     acceptFriend,
+    getUserDoc,
   };
 }

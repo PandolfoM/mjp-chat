@@ -24,7 +24,7 @@ const useStyles = createStyles((theme) => ({
 
 function Chat(props: Props) {
   const { classes } = useStyles();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [data, setData] = useState({
     username: "",
     color: "",
@@ -32,7 +32,6 @@ function Chat(props: Props) {
 
   useEffect(() => {
     const unsub = async () => {
-      setLoading(true);
       const q = query(
         collection(db, "users"),
         where("uid", "==", props.data.sentBy)
@@ -62,7 +61,9 @@ function Chat(props: Props) {
                 {formatTime(props.data.sentAt)}
               </Text>
             </div>
-            <Text>{props.data.text}</Text>
+            <Text sx={{ whiteSpace: "pre-line" }}>
+              {props.data.text.trim()}
+            </Text>
           </div>
         </>
       )}

@@ -11,7 +11,6 @@ interface ChatData {
 
 type Props = {
   chatData: DocumentData | undefined;
-  userDoc: DocumentData | undefined;
 };
 
 const useStyles = createStyles((theme) => ({
@@ -19,13 +18,13 @@ const useStyles = createStyles((theme) => ({
     flex: 1,
     overflowY: "auto",
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "column-reverse",
     gap: theme.spacing.lg,
     paddingBottom: theme.spacing.lg,
   },
   message: {
     width: "100%",
-    minHeight: 50,
+    // minHeight: 50,
     display: "flex",
     gap: theme.spacing.xs,
   },
@@ -36,13 +35,15 @@ function ChatMessages(props: Props) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    ref.current?.scrollIntoView();
+    if (ref.current) {
+      ref.current.scrollTop = ref.current.scrollHeight;
+    }
   }, [props.chatData]);
 
   return (
-    <div className={classes.container}>
+    <div className={classes.container} ref={ref}>
       {props.chatData?.map((i: ChatData) => (
-        <div ref={ref} className={classes.message} key={i.sentAt}>
+        <div className={classes.message} key={i.sentAt}>
           <Chat data={i} />
         </div>
       ))}

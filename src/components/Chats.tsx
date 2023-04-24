@@ -1,7 +1,7 @@
 import UserChat from "./UserChat";
 import {
-  DocumentData,
   collection,
+  getDocs,
   onSnapshot,
   query,
   where,
@@ -11,11 +11,7 @@ import { AuthContext } from "../auth/context";
 import { Chat } from "../utils/interfaces";
 import { db } from "../firebase";
 
-type Props = {
-  userDoc: DocumentData | undefined;
-};
-
-function Chats(props: Props) {
+function Chats() {
   const { currentUser } = useContext(AuthContext);
   const [chats, setChats] = useState<Array<Chat>>([]);
 
@@ -28,19 +24,27 @@ function Chats(props: Props) {
       onSnapshot(q, (querySnapshot) => {
         const arr: Array<Chat> = [];
         querySnapshot.forEach((doc) => {
-          arr.push(doc.data() as Chat);
+          if (doc.data().hidden?.find((i: string) => i === currentUser.uid)) {
+            return;
+          } else {
+            arr.push(doc.data() as Chat);
+          }
         });
         setChats(arr);
       });
     };
 
-    props.userDoc && unsub();
-  }, [props.userDoc]);
+    return () => {
+      currentUser && unsub();
+    };
+  }, []);
 
   return (
     <>
       {chats.map((i: Chat) => (
-        <UserChat chat={i} key={i.id} />
+        <div key={i.id}>
+          <UserChat chat={i} />
+        </div>
       ))}
     </>
   );
