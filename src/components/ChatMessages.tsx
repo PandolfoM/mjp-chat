@@ -24,7 +24,7 @@ const useStyles = createStyles((theme) => ({
   },
   message: {
     width: "100%",
-    minHeight: 50,
+    // minHeight: 50,
     display: "flex",
     gap: theme.spacing.xs,
   },

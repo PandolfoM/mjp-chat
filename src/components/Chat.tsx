@@ -61,7 +61,9 @@ function Chat(props: Props) {
                 {formatTime(props.data.sentAt)}
               </Text>
             </div>
-            <Text>{props.data.text}</Text>
+            <Text sx={{ whiteSpace: "pre-line" }}>
+              {props.data.text.trim()}
+            </Text>
           </div>
         </>
       )}

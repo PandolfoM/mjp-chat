@@ -10,7 +10,9 @@ function ChatBox() {
     if (e.keyCode == 13 && e.shiftKey == false) {
       e.preventDefault();
       if (text) {
-        addMessage(text);
+        console.log(text);
+
+        addMessage(`${text}`);
         setText("");
       }
     }
