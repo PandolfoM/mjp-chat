@@ -1,0 +1,85 @@
+import { useContext } from "react";
+import { AuthContext } from "../../auth/context";
+import UserButton from "../UserButton";
+import {
+  Avatar,
+  Button,
+  Divider,
+  Text,
+  Title,
+  createStyles,
+} from "@mantine/core";
+
+const useStyles = createStyles((theme) => ({
+  user: {
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing.xs,
+  },
+
+  userContainer: {
+    padding: theme.spacing.sm,
+    backgroundColor: theme.colors.dark[8],
+    borderRadius: theme.spacing.sm,
+  },
+
+  userInfo: {
+    marginTop: theme.spacing.md,
+    padding: theme.spacing.sm,
+    backgroundColor: theme.colors.dark[6],
+    borderRadius: theme.spacing.sm,
+    display: "flex",
+    flexDirection: "column",
+    gap: theme.spacing.sm,
+  },
+
+  userInfoSub: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+}));
+
+function MyAccount() {
+  const { classes } = useStyles();
+  const { currentUser, currentUserDoc } = useContext(AuthContext);
+
+  return (
+    <div>
+      {currentUserDoc && (
+        <div className={classes.userContainer}>
+          <div className={classes.user}>
+            <Avatar size={70} radius={40} color={currentUserDoc.color} />
+            <div>
+              <Text fw="bold" truncate size={25}>
+                {currentUserDoc.username}
+              </Text>
+            </div>
+          </div>
+          <div className={classes.userInfo}>
+            <div className={classes.userInfoSub}>
+              <div>
+                <Title order={6}>Username</Title>
+                <Text size={18} fw="bold">
+                  {currentUserDoc.username}
+                </Text>
+              </div>
+              <Button size="xs">Edit</Button>
+            </div>
+            <div className={classes.userInfoSub}>
+              <div>
+                <Title order={6}>Email</Title>
+                <Text size={18} fw="bold">
+                  {currentUserDoc.email}
+                </Text>
+              </div>
+              <Button size="xs">Edit</Button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default MyAccount;
