@@ -1,16 +1,27 @@
 import { useContext } from "react";
 import { AuthContext } from "../../auth/context";
-import UserButton from "../UserButton";
 import {
   Avatar,
   Button,
-  Divider,
+  PasswordInput,
+  Stack,
   Text,
+  TextInput,
   Title,
   createStyles,
 } from "@mantine/core";
+import { modals } from "@mantine/modals";
+import useAuth from "../../hooks/useAuth";
+import { notifications } from "@mantine/notifications";
+import { X } from "react-feather";
 
 const useStyles = createStyles((theme) => ({
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    gap: theme.spacing.md,
+  },
+
   user: {
     display: "flex",
     alignItems: "center",
@@ -43,16 +54,36 @@ const useStyles = createStyles((theme) => ({
 function MyAccount() {
   const { classes } = useStyles();
   const { currentUser, currentUserDoc } = useContext(AuthContext);
+  const { updateUsername } = useAuth();
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    const usernameUpdate = await updateUsername(
+      e.target.username.value,
+      e.target.password.value
+    );
+
+    modals.closeAll();
+    if (usernameUpdate) {
+      notifications.show({
+        title: usernameUpdate,
+        message: "",
+        color: "red",
+        icon: <X />,
+      });
+    }
+  };
 
   return (
-    <div>
-      {currentUserDoc && (
+    <>
+      <div className={classes.container}>
+        <Title order={4}>My Account</Title>
         <div className={classes.userContainer}>
           <div className={classes.user}>
-            <Avatar size={70} radius={40} color={currentUserDoc.color} />
+            <Avatar size={70} radius={40} color={currentUserDoc?.color} />
             <div>
               <Text fw="bold" truncate size={25}>
-                {currentUserDoc.username}
+                {currentUser.displayName}
               </Text>
             </div>
           </div>
@@ -61,24 +92,55 @@ function MyAccount() {
               <div>
                 <Title order={6}>Username</Title>
                 <Text size={18} fw="bold">
-                  {currentUserDoc.username}
+                  {currentUser.displayName}
                 </Text>
               </div>
-              <Button size="xs">Edit</Button>
+              <Button
+                size="xs"
+                onClick={() => {
+                  modals.open({
+                    centered: true,
+                    zIndex: 500,
+                    title: "Change Username",
+                    children: (
+                      <form onSubmit={(e) => handleSubmit(e)}>
+                        <Stack>
+                          <TextInput
+                            label="Username"
+                            withAsterisk
+                            data-autofocus
+                            name="username"
+                          />
+                          <PasswordInput
+                            label="Password"
+                            withAsterisk
+                            name="password"
+                          />
+                          <Button type="submit" fullWidth>
+                            Submit
+                          </Button>
+                        </Stack>
+                      </form>
+                    ),
+                  });
+                }}>
+                Edit
+              </Button>
             </div>
             <div className={classes.userInfoSub}>
               <div>
                 <Title order={6}>Email</Title>
                 <Text size={18} fw="bold">
-                  {currentUserDoc.email}
+                  {currentUser.email}
                 </Text>
               </div>
               <Button size="xs">Edit</Button>
             </div>
           </div>
         </div>
-      )}
-    </div>
+        <Button>Change Password</Button>
+      </div>
+    </>
   );
 }
 

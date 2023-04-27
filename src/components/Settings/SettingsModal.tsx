@@ -70,7 +70,7 @@ function SettingsModal(prop: Props) {
       <div className={classes.nav}>
         <div>
           <Button variant="subtle" onClick={() => setCurrentPage("myAccount")}>
-            User Info
+            My Account
           </Button>
         </div>
         <div>

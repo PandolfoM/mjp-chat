@@ -1,5 +1,7 @@
 import {
+  EmailAuthProvider,
   createUserWithEmailAndPassword,
+  reauthenticateWithCredential,
   signInWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
@@ -198,6 +200,32 @@ export default function useAuth() {
     await deleteDoc(ref);
   };
 
+  const updateUsername = async (username: string, password: string) => {
+    const credential = EmailAuthProvider.credential(
+      currentUser.email,
+      password
+    );
+
+    try {
+      const result = await reauthenticateWithCredential(
+        currentUser,
+        credential
+      );
+
+      if (result) {
+        await updateProfile(currentUser, {
+          displayName: username,
+        });
+
+        await updateDoc(doc(db, "users", currentUser.uid), {
+          username,
+        });
+      }
+    } catch (e) {
+      return "Incorrect Password!";
+    }
+  };
+
   return {
     registerUser,
     loginUser,
@@ -207,5 +235,6 @@ export default function useAuth() {
     removeFriendRequest,
     acceptFriend,
     getUserDoc,
+    updateUsername,
   };
 }
