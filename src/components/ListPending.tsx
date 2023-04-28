@@ -45,7 +45,6 @@ const useStyles = createStyles((theme) => ({
 
 function ListPending(props: Props) {
   const { classes } = useStyles();
-  const { currentUser } = useContext(AuthContext);
   const { removeFriendRequest, acceptFriend } = useAuth();
   const [user, setUser] = useState<User>();
   const theme = useMantineTheme();

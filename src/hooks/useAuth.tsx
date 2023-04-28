@@ -147,7 +147,6 @@ export default function useAuth() {
       friends: arrayRemove(currentUser.uid),
     });
     setFriends((current) => current.filter((i) => i.uid !== friendUid));
-    setCurrentPage("friends");
   };
 
   const removeFriendRequest = async (id: string) => {
