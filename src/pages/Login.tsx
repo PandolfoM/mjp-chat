@@ -9,7 +9,8 @@ import {
 import { useForm, yupResolver } from "@mantine/form";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../auth/context";
 
 const schema = Yup.object().shape({
   email: Yup.string().required("Email is required"),
@@ -21,7 +22,9 @@ function Login() {
   const navigate = useNavigate();
   const { loginUser } = useAuth();
   const [error, setError] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  const [pageLoading, setPageLoading] = useState<boolean>(false);
+  const { setLoading } = useContext(AuthContext);
+
   const form = useForm({
     validate: yupResolver(schema),
     validateInputOnChange: true,
@@ -32,21 +35,22 @@ function Login() {
   });
 
   const handleSubmit = async (values: FormValues) => {
-    setLoading(true);
+    setPageLoading(true);
     const res = await loginUser(values.email, values.password);
     if (res !== "success") {
       setError(res);
-      setLoading(false);
+      setPageLoading(false);
     } else {
-      setLoading(false);
+      setPageLoading(false);
       form.reset();
       navigate("/");
+      setLoading(false);
     }
   };
 
   return (
     <div className="form_page">
-      <LoadingOverlay visible={loading} />
+      <LoadingOverlay visible={pageLoading} />
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <>
           <TextInput

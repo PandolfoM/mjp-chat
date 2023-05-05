@@ -16,6 +16,7 @@ interface AuthContext {
   currentUser?: any;
   setCurrentUser: Dispatch<SetStateAction<any>>;
   loading: boolean;
+  setLoading: Dispatch<SetStateAction<boolean>>;
   currentUserDoc?: User;
   setCurrentUserDoc: Dispatch<SetStateAction<User>>;
 }
@@ -26,6 +27,7 @@ export const AuthContext = createContext<AuthContext>({
   currentUser: null,
   setCurrentUser: () => {},
   loading: true,
+  setLoading: () => {},
   currentUserDoc: { color: "", email: "", uid: "", username: "" },
   setCurrentUserDoc: () => {},
 });
@@ -65,6 +67,7 @@ export const AuthContextProvider = (props: React.PropsWithChildren<{}>) => {
         currentUser,
         setCurrentUser,
         loading,
+        setLoading,
         friends,
         setFriends,
         currentUserDoc,

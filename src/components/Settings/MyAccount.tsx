@@ -13,7 +13,8 @@ import {
 import { modals } from "@mantine/modals";
 import useAuth from "../../hooks/useAuth";
 import { notifications } from "@mantine/notifications";
-import { X } from "react-feather";
+import { Check, X } from "react-feather";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -54,23 +55,43 @@ const useStyles = createStyles((theme) => ({
 function MyAccount() {
   const { classes } = useStyles();
   const { currentUser, currentUserDoc } = useContext(AuthContext);
-  const { updateUsername } = useAuth();
+  const { updateUsername, updateUserEmail } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const usernameUpdate = await updateUsername(
-      e.target.username.value,
-      e.target.password.value
-    );
+    if (e.target.email.value) {
+      const updateEmail = await updateUserEmail(
+        e.target.email.value,
+        e.target.password.value
+      );
 
-    modals.closeAll();
-    if (usernameUpdate) {
-      notifications.show({
-        title: usernameUpdate,
-        message: "",
-        color: "red",
-        icon: <X />,
-      });
+      modals.closeAll();
+      if (updateEmail) {
+        updateEmail === "Success" && navigate("/login");
+
+        notifications.show({
+          title: updateEmail,
+          message: "",
+          color: updateEmail === "Success" ? "green" : "red",
+          icon: updateEmail === "Success" ? <Check /> : <X />,
+        });
+      }
+    } else {
+      const usernameUpdate = await updateUsername(
+        e.target.username.value,
+        e.target.password.value
+      );
+
+      modals.closeAll();
+      if (usernameUpdate) {
+        notifications.show({
+          title: usernameUpdate,
+          message: "",
+          color: "red",
+          icon: <X />,
+        });
+      }
     }
   };
 
@@ -134,7 +155,37 @@ function MyAccount() {
                   {currentUser.email}
                 </Text>
               </div>
-              <Button size="xs">Edit</Button>
+              <Button
+                size="xs"
+                onClick={() => {
+                  modals.open({
+                    centered: true,
+                    zIndex: 500,
+                    title: "Update email address",
+                    children: (
+                      <form onSubmit={(e) => handleSubmit(e)}>
+                        <Stack>
+                          <TextInput
+                            label="Email"
+                            withAsterisk
+                            data-autofocus
+                            name="email"
+                          />
+                          <PasswordInput
+                            label="Password"
+                            withAsterisk
+                            name="password"
+                          />
+                          <Button type="submit" fullWidth>
+                            Submit
+                          </Button>
+                        </Stack>
+                      </form>
+                    ),
+                  });
+                }}>
+                Edit
+              </Button>
             </div>
           </div>
         </div>

@@ -2,7 +2,10 @@ import {
   EmailAuthProvider,
   createUserWithEmailAndPassword,
   reauthenticateWithCredential,
+  sendEmailVerification,
   signInWithEmailAndPassword,
+  signOut,
+  updateEmail,
   updateProfile,
 } from "firebase/auth";
 import { auth, db } from "../firebase";
@@ -225,6 +228,28 @@ export default function useAuth() {
     }
   };
 
+  const updateUserEmail = async (email: string, password: string) => {
+    const credential = EmailAuthProvider.credential(
+      currentUser.email,
+      password
+    );
+
+    try {
+      const result = await reauthenticateWithCredential(
+        currentUser,
+        credential
+      );
+
+      if (result) {
+        await updateEmail(currentUser, email);
+        await signOut(auth);
+        return "Success";
+      }
+    } catch (e) {
+      return "There has been an error";
+    }
+  };
+
   return {
     registerUser,
     loginUser,
@@ -235,5 +260,6 @@ export default function useAuth() {
     acceptFriend,
     getUserDoc,
     updateUsername,
+    updateUserEmail,
   };
 }
