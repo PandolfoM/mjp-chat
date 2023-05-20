@@ -28,6 +28,7 @@ const useStyles = createStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     gap: theme.spacing.xs,
+    flex: 1,
   },
 }));
 
@@ -41,11 +42,10 @@ function FriendsList() {
   return (
     <>
       {friends?.map((i: User) => (
-        <div
-          className={classes.container}
-          key={i.uid}
-          onClick={() => findMessage(i.uid)}>
-          <div className={classes.btnContainer}>
+        <div className={classes.container} key={i.uid}>
+          <div
+            className={classes.btnContainer}
+            onClick={() => findMessage(i.uid)}>
             <UserButton user={i} />
           </div>
           <Tooltip label="Delete" color="gray" withArrow>
@@ -53,6 +53,7 @@ function FriendsList() {
               radius="xl"
               variant="light"
               size="xl"
+              sx={{ zIndex: 10 }}
               onClick={() => removeFriend(i.uid)}>
               <Trash size={theme.fontSizes.lg} color={theme.colors.dark[0]} />
             </ActionIcon>

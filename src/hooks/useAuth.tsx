@@ -1,6 +1,12 @@
 import {
+  EmailAuthProvider,
   createUserWithEmailAndPassword,
+  reauthenticateWithCredential,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
+  signOut,
+  updateEmail,
+  updatePassword,
   updateProfile,
 } from "firebase/auth";
 import { auth, db } from "../firebase";
@@ -104,8 +110,10 @@ export default function useAuth() {
       const uidArr: Array<string> = [];
 
       querySnapshot.forEach((doc) => {
-        for (let i = 0; i < doc.data().friends.length; i++) {
-          uidArr.push(doc.data().friends[i]);
+        if (doc.data().friends) {
+          for (let i = 0; i < doc.data().friends.length; i++) {
+            uidArr.push(doc.data().friends[i]);
+          }
         }
       });
 
@@ -145,7 +153,6 @@ export default function useAuth() {
       friends: arrayRemove(currentUser.uid),
     });
     setFriends((current) => current.filter((i) => i.uid !== friendUid));
-    setCurrentPage("friends");
   };
 
   const removeFriendRequest = async (id: string) => {
@@ -198,6 +205,83 @@ export default function useAuth() {
     await deleteDoc(ref);
   };
 
+  const updateUsername = async (username: string, password: string) => {
+    const credential = EmailAuthProvider.credential(
+      currentUser.email,
+      password
+    );
+
+    try {
+      const result = await reauthenticateWithCredential(
+        currentUser,
+        credential
+      );
+
+      if (result) {
+        await updateProfile(currentUser, {
+          displayName: username,
+        });
+
+        await updateDoc(doc(db, "users", currentUser.uid), {
+          username,
+        });
+      }
+    } catch (e) {
+      return "Incorrect Password!";
+    }
+  };
+
+  const updateUserEmail = async (email: string, password: string) => {
+    const credential = EmailAuthProvider.credential(
+      currentUser.email,
+      password
+    );
+
+    try {
+      const result = await reauthenticateWithCredential(
+        currentUser,
+        credential
+      );
+
+      if (result) {
+        await updateEmail(currentUser, email);
+        await signOut(auth);
+        return "Success";
+      }
+    } catch (e) {
+      return "There has been an error";
+    }
+  };
+
+  const sendResetPassword = async () => {
+    console.log(currentUser.email);
+
+    sendPasswordResetEmail(auth, currentUser.email)
+      .then(() => {
+        console.log("sent!");
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  const resetPassword = async (newPass: string, oldPass: string) => {
+    const credential = EmailAuthProvider.credential(currentUser.email, oldPass);
+
+    try {
+      const result = await reauthenticateWithCredential(
+        currentUser,
+        credential
+      );
+
+      if (result) {
+        await updatePassword(currentUser, newPass);
+      }
+    } catch (e) {
+      return "There has been an error";
+    }
+  };
+
   return {
     registerUser,
     loginUser,
@@ -207,5 +291,9 @@ export default function useAuth() {
     removeFriendRequest,
     acceptFriend,
     getUserDoc,
+    updateUsername,
+    updateUserEmail,
+    sendResetPassword,
+    resetPassword,
   };
 }

@@ -4,6 +4,8 @@ import App from "./App";
 import { MantineProvider, MantineThemeOverride } from "@mantine/core";
 import { AuthContextProvider } from "./auth/context";
 import { PageContextProvider } from "./context/PageContext";
+import { ModalsProvider } from "@mantine/modals";
+import { Notifications } from "@mantine/notifications";
 
 const mantineTheme: MantineThemeOverride = {
   colorScheme: "dark",
@@ -54,7 +56,10 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <AuthContextProvider>
       <PageContextProvider>
         <MantineProvider theme={mantineTheme} withNormalizeCSS withGlobalStyles>
-          <App />
+          <Notifications />
+          <ModalsProvider>
+            <App />
+          </ModalsProvider>
         </MantineProvider>
       </PageContextProvider>
     </AuthContextProvider>

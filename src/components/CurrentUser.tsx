@@ -1,9 +1,9 @@
 import { ActionIcon, Avatar, Text, createStyles } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Settings } from "react-feather";
-import SettingsModal from "./SettingsModal";
 import { useContext } from "react";
 import { AuthContext } from "../auth/context";
+import { SettingsModal } from "./Settings";
 
 const useStyles = createStyles((theme) => ({
   container: {
