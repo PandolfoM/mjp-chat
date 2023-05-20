@@ -35,6 +35,7 @@ const schema = Yup.object().shape({
 });
 
 function PasswordReset() {
+  type FormValues = typeof form.values;
   const { classes } = useStyles();
   const { resetPassword } = useAuth();
   const navigate = useNavigate();
@@ -49,7 +50,7 @@ function PasswordReset() {
     },
   });
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (values: FormValues) => {
     try {
       await resetPassword(values.new, values.old);
       navigate("/");
