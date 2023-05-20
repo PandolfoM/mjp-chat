@@ -55,7 +55,7 @@ const useStyles = createStyles((theme) => ({
 function MyAccount() {
   const { classes } = useStyles();
   const { currentUser, currentUserDoc } = useContext(AuthContext);
-  const { updateUsername, updateUserEmail } = useAuth();
+  const { updateUsername, updateUserEmail, sendResetPassword } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: any) => {
@@ -189,7 +189,28 @@ function MyAccount() {
             </div>
           </div>
         </div>
-        <Button>Change Password</Button>
+        <Button
+          onClick={() => {
+            modals.openConfirmModal({
+              centered: true,
+              zIndex: 500,
+              title: "Password reset",
+              children: (
+                <>
+                  <Title order={5}>
+                    We will send you an email with a link to reset your
+                    password.
+                  </Title>
+                </>
+              ),
+              labels: { confirm: "Confirm", cancel: "Cancel" },
+              cancelProps: { fullWidth: true },
+              confirmProps: { fullWidth: true },
+              onConfirm: () => sendResetPassword(),
+            });
+          }}>
+          Change Password
+        </Button>
       </div>
     </>
   );

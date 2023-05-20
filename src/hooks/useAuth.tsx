@@ -2,10 +2,11 @@ import {
   EmailAuthProvider,
   createUserWithEmailAndPassword,
   reauthenticateWithCredential,
-  sendEmailVerification,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
   updateEmail,
+  updatePassword,
   updateProfile,
 } from "firebase/auth";
 import { auth, db } from "../firebase";
@@ -109,8 +110,10 @@ export default function useAuth() {
       const uidArr: Array<string> = [];
 
       querySnapshot.forEach((doc) => {
-        for (let i = 0; i < doc.data().friends.length; i++) {
-          uidArr.push(doc.data().friends[i]);
+        if (doc.data().friends) {
+          for (let i = 0; i < doc.data().friends.length; i++) {
+            uidArr.push(doc.data().friends[i]);
+          }
         }
       });
 
@@ -250,6 +253,35 @@ export default function useAuth() {
     }
   };
 
+  const sendResetPassword = async () => {
+    console.log(currentUser.email);
+
+    sendPasswordResetEmail(auth, currentUser.email)
+      .then(() => {
+        console.log("sent!");
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  const resetPassword = async (newPass: string, oldPass: string) => {
+    const credential = EmailAuthProvider.credential(currentUser.email, oldPass);
+
+    try {
+      const result = await reauthenticateWithCredential(
+        currentUser,
+        credential
+      );
+
+      if (result) {
+        await updatePassword(currentUser, newPass);
+      }
+    } catch (e) {
+      return "There has been an error";
+    }
+  };
+
   return {
     registerUser,
     loginUser,
@@ -261,5 +293,7 @@ export default function useAuth() {
     getUserDoc,
     updateUsername,
     updateUserEmail,
+    sendResetPassword,
+    resetPassword,
   };
 }
