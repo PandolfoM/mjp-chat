@@ -1,15 +1,17 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./App.scss";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import { useContext } from "react";
+import { Suspense, lazy, useContext } from "react";
 import { AuthContext } from "./auth/context";
-import PasswordReset from "./pages/PasswordReset";
+import { LoadingOverlay } from "@mantine/core";
 
 type Props = {
   children: JSX.Element;
 };
+
+const Home = lazy(() => import("./pages/Home"));
+const Login = lazy(() => import("./pages/Login"));
+const Register = lazy(() => import("./pages/Register"));
+const PasswordReset = lazy(() => import("./pages/PasswordReset"));
 
 function App() {
   const { loading, currentUser } = useContext(AuthContext);
@@ -25,19 +27,41 @@ function App() {
         <Route
           path="/"
           element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
+            <Suspense
+              fallback={<LoadingOverlay visible={true} overlayOpacity={1} />}>
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            </Suspense>
           }
         />
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
         <Route
           path="resetpassword"
           element={
-            <ProtectedRoute>
-              <PasswordReset />
-            </ProtectedRoute>
+            <Suspense
+              fallback={<LoadingOverlay visible={true} overlayOpacity={1} />}>
+              <ProtectedRoute>
+                <PasswordReset />
+              </ProtectedRoute>
+            </Suspense>
+          }
+        />
+        <Route
+          path="login"
+          element={
+            <Suspense
+              fallback={<LoadingOverlay visible={true} overlayOpacity={1} />}>
+              <Login />
+            </Suspense>
+          }
+        />
+        <Route
+          path="register"
+          element={
+            <Suspense
+              fallback={<LoadingOverlay visible={true} overlayOpacity={1} />}>
+              <Register />
+            </Suspense>
           }
         />
       </Routes>
